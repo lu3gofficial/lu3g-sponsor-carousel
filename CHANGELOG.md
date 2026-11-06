@@ -1,5 +1,12 @@
 # Registro delle modifiche
 
+## 1.0.0
+- Step 7, rifinitura: prima versione completa.
+- *Pulsante pausa* facoltativo (Layout) per marquee, doppia riga, logo wall e slider con autoplay: ferma e riprende il movimento, con aria-pressed ed etichetta che cambia. Richiesto dalle regole di accessibilità (WCAG 2.2.2) per i contenuti che si muovono da soli; su telefono non c'è il passaggio del mouse.
+- Uno sponsor con link ma senza nome e senza testo alternativo ha comunque un nome per gli screen reader ("Sponsor: dominio").
+- Movimento ridotto: niente transizioni negli effetti e nel tooltip, pulsante pausa nascosto (non si muove nulla).
+- File delle traduzioni `languages/lu3g-sponsor-carousel.pot` e `readme.txt`.
+
 ## 0.6.0
 - Step 6: tab Stile completa.
 - *Effetto*, normale e hover (vale anche col focus da tastiera): scala di grigi, opacità, scala, durata della transizione. L'hover eredita il normale se non è impostato.

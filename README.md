@@ -15,7 +15,7 @@ Il plugin si costruisce a step, ognuno pubblicato come release da provare:
 4. ✅ Slider con lo Swiper di Elementor (0.4.0)
 5. ✅ Logo wall (0.5.0)
 6. ✅ Tab Stile completo, effetti hover, tooltip (0.6.0)
-7. Rifinitura: movimento ridotto, accessibilità, test nell'editor e nel footer del Theme Builder
+7. ✅ Rifinitura: movimento ridotto, accessibilità, pulsante pausa, traduzioni (1.0.0)
 
 ## Installazione su un sito
 1. Scarica `lu3g-sponsor-carousel.zip` dall'ultima [release](../../releases/latest).

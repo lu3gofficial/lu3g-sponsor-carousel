@@ -245,6 +245,11 @@
 		transition: none;
 	}
 
+	/* Con il movimento ridotto non si muove nulla: il pulsante pausa non serve */
+	.lu3g-sc .lu3g-sc__pause {
+		display: none;
+	}
+
 	.lu3g-sc--logo_wall .lu3g-sc__item.is-pooled {
 		display: flex;
 	}
@@ -386,6 +391,49 @@
 
 .lu3g-sc-arrows-bottom .lu3g-sc .lu3g-sc__arrow--next {
 	right: calc(50% - var(--lu3g-sc-arrow-size, 36px) - 6px);
+}
+
+/* ---------- Pulsante pausa ---------- */
+
+.lu3g-sc .lu3g-sc__pause {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	color: #1d2327;
+	font-size: 12px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.lu3g-sc .lu3g-sc__pause:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+.lu3g-sc__play-icon,
+.lu3g-sc--paused .lu3g-sc__pause-icon {
+	display: none;
+}
+
+.lu3g-sc--paused .lu3g-sc__play-icon {
+	display: block;
+}
+
+/* In pausa col pulsante: il marquee si ferma (logo wall e slider li ferma il JS) */
+.lu3g-sc--paused .lu3g-sc__track {
+	animation-play-state: paused;
 }
 
 /* ---------- Tooltip ---------- */

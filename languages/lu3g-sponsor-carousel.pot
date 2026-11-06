@@ -1,0 +1,396 @@
+# Copyright (C) 2026 LU3G Agenzia Web
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: LU3G Sponsor Carousel 1.0.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-06\n"
+"X-Domain: lu3g-sponsor-carousel\n"
+
+#: includes/widgets/class-sponsor-carousel-widget.php:53
+msgid "Sponsor Carousel"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:125
+msgid "Marquee (scorrimento continuo)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:126
+msgid "Doppia riga"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:127
+msgid "Slider"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:128
+msgid "Logo wall"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:129
+msgid "Griglia"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:153 includes/widgets/class-sponsor-carousel-widget.php:549
+msgid "Loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:162
+msgid "Logo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:173
+msgid "Logo alternativo (facoltativo)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:176
+msgid "Per esempio la versione bianca per gli sfondi scuri. Si usa con \"Usa il logo alternativo\" in Layout."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:184
+msgid "Nome dello sponsor"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:187
+msgid "Testo alternativo dell'immagine e, più avanti, tooltip."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:195
+msgid "Link"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:198
+msgid "Il link riceve sempre rel=\"sponsored noopener\". \"Apri in una nuova scheda\" è nelle opzioni del link (ingranaggio)."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:208 includes/widgets/class-sponsor-carousel-widget.php:211
+msgid "Sponsor"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:213
+msgid "Sponsor 1"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:214
+msgid "Sponsor 2"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:215
+msgid "Sponsor 3"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:216
+msgid "Sponsor 4"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:233
+msgid "Nome per gli screen reader"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:235 includes/widgets/class-sponsor-carousel-widget.php:1095
+msgid "I nostri sponsor"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:250
+msgid "Layout"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:257
+msgid "Stile"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:267
+msgid "Usa il logo alternativo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:271
+msgid "Dove c'è un logo alternativo, si mostra quello. Gli sponsor senza restano col logo principale."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:278 includes/widgets/class-sponsor-carousel-widget.php:498
+msgid "Colonne"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:295
+msgid "Durata di un giro (secondi)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:300
+msgid "Tempo in cui scorrono tutti i loghi una volta: più alto = più lento."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:309
+msgid "Direzione"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:313
+msgid "Verso sinistra"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:317
+msgid "Verso destra"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:323
+msgid "Con la doppia riga, la seconda riga va nella direzione opposta."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:331
+msgid "Pausa al passaggio del mouse"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:335
+msgid "Vale anche quando un logo riceve il focus da tastiera."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:343
+msgid "Sfumatura ai bordi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:354
+msgid "Larghezza della sfumatura"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:372
+msgid "Loghi visibili"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:388
+msgid "Autoplay"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:393
+msgid "Si ferma al passaggio del mouse e col focus da tastiera."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:401
+msgid "Intervallo (ms)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:415
+msgid "Ciclo infinito"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:420
+msgid "Si disattiva da solo se i loghi non bastano a riempire lo slider."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:428 includes/widgets/class-sponsor-carousel-widget.php:810
+msgid "Frecce"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:440 includes/widgets/class-sponsor-carousel-widget.php:891
+msgid "Pallini"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:452
+msgid "Velocità della transizione (ms)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:466
+msgid "Pulsante pausa"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:471
+msgid "Un piccolo pulsante per fermare e riprendere il movimento: serve a chi usa il telefono (niente passaggio del mouse) ed è richiesto dalle regole di accessibilità per i contenuti che si muovono da soli."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:481
+msgid "Loghi visibili (slot)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:503
+msgid "Vuoto = tutti gli slot su una riga."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:512
+msgid "Intervallo di sostituzione (ms)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:519
+msgid "Ogni volta un logo a caso lascia il posto a uno che non si vede. Si ferma al passaggio del mouse e col focus da tastiera."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:527
+msgid "Durata della dissolvenza (ms)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:557
+msgid "Altezza massima"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:571
+msgid "Larghezza massima"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:585
+msgid "Spaziatura tra i loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:599
+msgid "Allineamento verticale"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:603
+msgid "In alto"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:607
+msgid "Al centro"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:611
+msgid "In basso"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:629
+msgid "Effetto"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:639 includes/widgets/class-sponsor-carousel-widget.php:729 includes/widgets/class-sponsor-carousel-widget.php:843
+msgid "Normale"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:639 includes/widgets/class-sponsor-carousel-widget.php:758 includes/widgets/class-sponsor-carousel-widget.php:865
+msgid "Hover"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:645
+msgid "Scala di grigi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:656
+msgid "Opacità"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:666
+msgid "Scala"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:681
+msgid "Durata della transizione (ms)"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:702
+msgid "Box del logo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:710 includes/widgets/class-sponsor-carousel-widget.php:1020
+msgid "Spaziatura interna"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:720 includes/widgets/class-sponsor-carousel-widget.php:1031
+msgid "Arrotondamento"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:734 includes/widgets/class-sponsor-carousel-widget.php:763 includes/widgets/class-sponsor-carousel-widget.php:857 includes/widgets/class-sponsor-carousel-widget.php:879
+msgid "Sfondo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:772
+msgid "Colore del bordo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:801
+msgid "Frecce e pallini"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:818
+msgid "Posizione"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:822
+msgid "Ai lati, fuori dai loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:823
+msgid "Ai lati, sopra i loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:824
+msgid "Sotto, al centro"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:833 includes/widgets/class-sponsor-carousel-widget.php:900
+msgid "Dimensione"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:848 includes/widgets/class-sponsor-carousel-widget.php:870 includes/widgets/class-sponsor-carousel-widget.php:911
+msgid "Colore"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:920
+msgid "Colore del pallino attivo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:929
+msgid "Allineamento"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:933
+msgid "Sinistra"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:937
+msgid "Centro"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:941
+msgid "Destra"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:952
+msgid "Distanza dai loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:972
+msgid "Tooltip"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:980
+msgid "Mostra il nome"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:984
+msgid "Il nome dello sponsor compare sopra il logo al passaggio del mouse e col focus da tastiera."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:991
+msgid "Colore del testo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:1056
+msgid "Aggiungi almeno un logo nella sezione Loghi."
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:1135
+msgid "Metti in pausa lo scorrimento dei loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:1136
+msgid "Riprendi lo scorrimento dei loghi"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:1188
+msgid "Logo precedente"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:1189
+msgid "Logo successivo"
+msgstr ""
+
+#: includes/widgets/class-sponsor-carousel-widget.php:1312
+#, php-format
+msgid "Sponsor: %s"
+msgstr ""
+
+#: lu3g-sponsor-carousel.php:69
+msgid "LU3G Sponsor Carousel richiede Elementor attivo."
+msgstr ""
+
+#: lu3g-sponsor-carousel.php:86
+#, php-format
+msgid "LU3G Sponsor Carousel richiede Elementor %s o successivo: aggiorna Elementor."
+msgstr ""

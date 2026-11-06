@@ -260,6 +260,32 @@
 		root.addEventListener( 'focusout', hide );
 	}
 
+	/**
+	 * Pulsante pausa: aggiunge o toglie lu3g-sc--paused sul widget e avvisa chi deve fermarsi.
+	 *
+	 * @param {HTMLElement} root     Contenitore del widget.
+	 * @param {Function}    onChange Chiamata con true (in pausa) o false.
+	 */
+	function setupPauseButton( root, onChange ) {
+		var button = root.querySelector( '.lu3g-sc__pause' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		button.addEventListener( 'click', function () {
+			var paused = ! root.classList.contains( 'lu3g-sc--paused' );
+
+			root.classList.toggle( 'lu3g-sc--paused', paused );
+			button.setAttribute( 'aria-pressed', paused ? 'true' : 'false' );
+			button.setAttribute( 'aria-label', button.getAttribute( paused ? 'data-label-play' : 'data-label-pause' ) );
+
+			if ( onChange ) {
+				onChange( paused );
+			}
+		} );
+	}
+
 	function register() {
 		var Base = window.elementorModules && window.elementorModules.frontend.handlers.Base;
 
@@ -301,6 +327,8 @@
 				if ( ! root ) {
 					return;
 				}
+
+				setupPauseButton( root );
 
 				var rows = Array.prototype.slice.call( root.querySelectorAll( '.lu3g-sc__row' ) );
 				var fill = function () {
@@ -367,7 +395,7 @@
 				};
 
 				var swap = function () {
-					if ( paused || busy || document.hidden || slots >= items.length ) {
+					if ( paused || busy || document.hidden || slots >= items.length || root.classList.contains( 'lu3g-sc--paused' ) ) {
 						return;
 					}
 
@@ -409,6 +437,7 @@
 
 				layout();
 				this.timers.push( window.setInterval( swap, interval ) );
+				setupPauseButton( root );
 
 				// Pausa al passaggio del mouse e col focus da tastiera.
 				root.addEventListener( 'mouseenter', function () {
@@ -488,10 +517,18 @@
 						}
 					};
 					var start = function () {
-						if ( swiper.autoplay && ! root.contains( document.activeElement ) && ! root.matches( ':hover' ) ) {
+						if ( swiper.autoplay && ! root.classList.contains( 'lu3g-sc--paused' ) && ! root.contains( document.activeElement ) && ! root.matches( ':hover' ) ) {
 							swiper.autoplay.start();
 						}
 					};
+
+					setupPauseButton( root, function ( paused ) {
+						if ( paused ) {
+							stop();
+						} else if ( swiper.autoplay ) {
+							swiper.autoplay.start();
+						}
+					} );
 
 					root.addEventListener( 'mouseenter', stop );
 					root.addEventListener( 'mouseleave', start );

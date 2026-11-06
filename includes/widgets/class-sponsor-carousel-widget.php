@@ -460,6 +460,19 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'pause_button',
+			array(
+				'label'        => esc_html__( 'Pulsante pausa', 'lu3g-sponsor-carousel' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'separator'    => 'before',
+				'description'  => esc_html__( 'Un piccolo pulsante per fermare e riprendere il movimento: serve a chi usa il telefono (niente passaggio del mouse) ed è richiesto dalle regole di accessibilità per i contenuti che si muovono da soli.', 'lu3g-sponsor-carousel' ),
+				'condition'    => array( 'style' => array( 'marquee', 'doppia_riga', 'slider', 'logo_wall' ) ),
+			)
+		);
+
 		$wall = array( 'style' => 'logo_wall' );
 
 		$this->add_responsive_control(
@@ -1109,6 +1122,21 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			}
 		}
 
+		// Pulsante pausa: solo per gli stili che si muovono da soli.
+		$moves = in_array( $layout, array( 'marquee', 'doppia_riga', 'logo_wall' ), true )
+			|| ( 'slider' === $layout && 'yes' === $settings['slider_autoplay'] );
+
+		if ( 'yes' === $settings['pause_button'] && $moves ) {
+			printf(
+				'<button type="button" class="lu3g-sc__pause" aria-pressed="false" aria-label="%1$s" data-label-pause="%1$s" data-label-play="%2$s">'
+					. '<svg class="lu3g-sc__pause-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>'
+					. '<svg class="lu3g-sc__play-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>'
+					. '</button>',
+				esc_attr__( 'Metti in pausa lo scorrimento dei loghi', 'lu3g-sponsor-carousel' ),
+				esc_attr__( 'Riprendi lo scorrimento dei loghi', 'lu3g-sponsor-carousel' )
+			);
+		}
+
 		// Tooltip: un solo elemento, fuori dalle righe che scorrono (che tagliano ciò che esce).
 		if ( 'yes' === $settings['tooltip'] ) {
 			echo '<span class="lu3g-sc__tip" aria-hidden="true"></span>';
@@ -1272,9 +1300,21 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
-		if ( '' !== $name ) {
-			$this->add_render_attribute( $key, 'aria-label', $name );
+		// Nome del link per gli screen reader: il nome dello sponsor; senza nome e senza testo
+		// alternativo il link resterebbe muto, quindi si usa il dominio ("Sponsor: esempio.it").
+		$media_id = isset( $media['id'] ) ? (int) $media['id'] : 0;
+		$label    = '' !== $name ? $name : ( $media_id ? $this->lu3g_sc_attachment_alt( $media_id ) : '' );
+
+		if ( '' === $label ) {
+			$host  = wp_parse_url( $logo['link']['url'], PHP_URL_HOST );
+			$label = sprintf(
+				/* translators: %s: dominio del sito dello sponsor. */
+				__( 'Sponsor: %s', 'lu3g-sponsor-carousel' ),
+				$host ? preg_replace( '/^www\./', '', $host ) : $logo['link']['url']
+			);
 		}
+
+		$this->add_render_attribute( $key, 'aria-label', $label );
 
 		if ( '' !== $tip ) {
 			$this->add_render_attribute( $key, 'data-lu3g-sc-tip', $tip );
