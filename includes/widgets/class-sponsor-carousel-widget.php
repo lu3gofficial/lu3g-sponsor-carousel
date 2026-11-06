@@ -2,7 +2,7 @@
 /**
  * Widget Elementor: LU3G Sponsor Carousel.
  *
- * Stili pronti: griglia, marquee, doppia riga. Gli altri sono già nel selettore e, finché non sono
+ * Stili pronti: griglia, marquee, doppia riga, slider (Swiper di Elementor). Gli altri sono già nel selettore e, finché non sono
  * pronti, vengono mostrati come griglia con un avviso nell'editor.
  *
  * Solo render(), senza content_template(): il markup usa wp_get_attachment_image (srcset, width e
@@ -31,7 +31,7 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	/**
 	 * Stili già pronti; gli altri, per ora, si vedono come griglia.
 	 */
-	const READY_STYLES = array( 'griglia', 'marquee', 'doppia_riga' );
+	const READY_STYLES = array( 'griglia', 'marquee', 'doppia_riga', 'slider' );
 
 	/**
 	 * Nome interno del widget (usato anche dall'hook JS frontend/element_ready/<nome>.default).
@@ -84,7 +84,16 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	 * @return array
 	 */
 	public function get_style_depends() {
-		return array( 'lu3g-sc-sponsor-carousel' );
+		$depends = array( 'lu3g-sc-sponsor-carousel' );
+
+		// CSS di Swiper registrato da Elementor ("swiper", e dalla 3.24 "e-swiper"), solo per lo slider.
+		// Un handle che non esiste viene ignorato.
+		if ( 'slider' === $this->get_settings( 'style' ) || \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			$depends[] = 'swiper';
+			$depends[] = 'e-swiper';
+		}
+
+		return $depends;
 	}
 
 	/**
@@ -351,6 +360,102 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
+		$slider = array( 'style' => 'slider' );
+
+		$this->add_responsive_control(
+			'slider_visible',
+			array(
+				'label'              => esc_html__( 'Loghi visibili', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::NUMBER,
+				'min'                => 1,
+				'max'                => 12,
+				'step'               => 1,
+				'default'            => 4,
+				'tablet_default'     => 3,
+				'mobile_default'     => 2,
+				'frontend_available' => true,
+				'condition'          => $slider,
+			)
+		);
+
+		$this->add_control(
+			'slider_autoplay',
+			array(
+				'label'              => esc_html__( 'Autoplay', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::SWITCHER,
+				'return_value'       => 'yes',
+				'default'            => 'yes',
+				'frontend_available' => true,
+				'description'        => esc_html__( 'Si ferma al passaggio del mouse e col focus da tastiera.', 'lu3g-sponsor-carousel' ),
+				'condition'          => $slider,
+			)
+		);
+
+		$this->add_control(
+			'slider_interval',
+			array(
+				'label'              => esc_html__( 'Intervallo (ms)', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::NUMBER,
+				'min'                => 500,
+				'max'                => 20000,
+				'step'               => 100,
+				'default'            => 3000,
+				'frontend_available' => true,
+				'condition'          => $slider + array( 'slider_autoplay' => 'yes' ),
+			)
+		);
+
+		$this->add_control(
+			'slider_loop',
+			array(
+				'label'              => esc_html__( 'Ciclo infinito', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::SWITCHER,
+				'return_value'       => 'yes',
+				'default'            => 'yes',
+				'frontend_available' => true,
+				'description'        => esc_html__( 'Si disattiva da solo se i loghi non bastano a riempire lo slider.', 'lu3g-sponsor-carousel' ),
+				'condition'          => $slider,
+			)
+		);
+
+		$this->add_control(
+			'slider_arrows',
+			array(
+				'label'              => esc_html__( 'Frecce', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::SWITCHER,
+				'return_value'       => 'yes',
+				'default'            => 'yes',
+				'frontend_available' => true,
+				'condition'          => $slider,
+			)
+		);
+
+		$this->add_control(
+			'slider_dots',
+			array(
+				'label'              => esc_html__( 'Pallini', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::SWITCHER,
+				'return_value'       => 'yes',
+				'default'            => '',
+				'frontend_available' => true,
+				'condition'          => $slider,
+			)
+		);
+
+		$this->add_control(
+			'slider_speed',
+			array(
+				'label'              => esc_html__( 'Velocità della transizione (ms)', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::NUMBER,
+				'min'                => 100,
+				'max'                => 5000,
+				'step'               => 50,
+				'default'            => 600,
+				'frontend_available' => true,
+				'condition'          => $slider,
+			)
+		);
+
 		$this->end_controls_section();
 	}
 
@@ -465,7 +570,7 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 
 		$classes = array( 'lu3g-sc', 'lu3g-sc--' . $layout );
 
-		if ( 'griglia' !== $layout ) {
+		if ( in_array( $layout, array( 'marquee', 'doppia_riga' ), true ) ) {
 			$classes[] = 'lu3g-sc--moving';
 
 			if ( 'yes' === $settings['marquee_pause'] ) {
@@ -491,6 +596,8 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 
 		if ( 'griglia' === $layout ) {
 			echo $this->lu3g_sc_list( $items ); // phpcs:ignore WordPress.Security.EscapeOutput
+		} elseif ( 'slider' === $layout ) {
+			echo $this->lu3g_sc_slider( $items, $settings ); // phpcs:ignore WordPress.Security.EscapeOutput
 		} else {
 			$reverse = 'right' === $settings['marquee_direction'];
 
@@ -531,6 +638,54 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 		}
 
 		return $out . '</ul>';
+	}
+
+	/**
+	 * Slider: markup di Swiper. L'avvio, con le opzioni dei controlli, è nel JS (handler di Elementor).
+	 *
+	 * @param array $items    Markup dei loghi.
+	 * @param array $settings Impostazioni del widget.
+	 * @return string
+	 */
+	private function lu3g_sc_slider( array $items, array $settings ) {
+		$out = '<div class="lu3g-sc__swiper ' . esc_attr( $this->lu3g_sc_swiper_class() ) . '"><div class="swiper-wrapper">';
+
+		foreach ( $items as $item ) {
+			$out .= '<div class="swiper-slide lu3g-sc__item">' . $item . '</div>';
+		}
+
+		$out .= '</div></div>';
+
+		if ( 'yes' === $settings['slider_arrows'] ) {
+			$arrow = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+			$out .= '<button type="button" class="lu3g-sc__arrow lu3g-sc__arrow--prev" aria-label="' . esc_attr__( 'Logo precedente', 'lu3g-sponsor-carousel' ) . '">' . $arrow . '</button>';
+			$out .= '<button type="button" class="lu3g-sc__arrow lu3g-sc__arrow--next" aria-label="' . esc_attr__( 'Logo successivo', 'lu3g-sponsor-carousel' ) . '">' . $arrow . '</button>';
+		}
+
+		if ( 'yes' === $settings['slider_dots'] ) {
+			$out .= '<div class="lu3g-sc__dots"></div>';
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Classe del contenitore di Swiper. Elementor carica Swiper 8 (classe "swiper") con la funzione
+	 * "e_swiper_latest" attiva, o dove quella funzione non esiste più perché è diventata la norma;
+	 * Swiper 5 (classe "swiper-container") con la funzione spenta o nelle versioni precedenti alla 3.11.
+	 * Il JS la corregge comunque con elementorFrontend.config.swiperClass, se Elementor la dichiara.
+	 *
+	 * @return string
+	 */
+	private function lu3g_sc_swiper_class() {
+		$experiments = isset( \Elementor\Plugin::$instance->experiments ) ? \Elementor\Plugin::$instance->experiments : null;
+
+		if ( $experiments && method_exists( $experiments, 'get_features' ) && $experiments->get_features( 'e_swiper_latest' ) ) {
+			return $experiments->is_feature_active( 'e_swiper_latest' ) ? 'swiper' : 'swiper-container';
+		}
+
+		return ( defined( 'ELEMENTOR_VERSION' ) && version_compare( ELEMENTOR_VERSION, '3.11.0', '<' ) ) ? 'swiper-container' : 'swiper';
 	}
 
 	/**
@@ -589,9 +744,9 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 		$name = isset( $logo['name'] ) ? trim( wp_strip_all_tags( (string) $logo['name'] ) ) : '';
 		$img  = $this->lu3g_sc_image_markup( $media, $name, $settings );
 
-		// Nel marquee i loghi fuori dal bordo entrano in vista scorrendo: con loading="lazy" si
-		// caricherebbero solo in quel momento e comparirebbero di colpo. Lì si caricano subito.
-		if ( in_array( $settings['style'], array( 'marquee', 'doppia_riga' ), true ) ) {
+		// Nel marquee e nello slider i loghi fuori dal bordo entrano in vista scorrendo: con
+		// loading="lazy" si caricherebbero solo in quel momento e comparirebbero di colpo.
+		if ( in_array( $settings['style'], array( 'marquee', 'doppia_riga', 'slider' ), true ) ) {
 			$img = str_replace( 'loading="lazy"', 'loading="eager"', $img );
 		}
 

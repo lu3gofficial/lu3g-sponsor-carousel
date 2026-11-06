@@ -1,5 +1,11 @@
 # Registro delle modifiche
 
+## 0.4.0
+- Step 4: stile *Slider* con lo Swiper incluso in Elementor (elementorFrontend.utils.swiper), senza caricarne un altro. Classe del contenitore giusta per Swiper 5 o 8 (funzione "e_swiper_latest" e elementorFrontend.config.swiperClass); CSS di Swiper caricato solo con lo slider.
+- Loghi visibili per desktop, tablet e mobile (punti di passaggio di Elementor), autoplay con intervallo, ciclo infinito (spento da solo se i loghi non bastano), frecce, pallini, velocità della transizione. Spazio tra i loghi dalla spaziatura dello stile.
+- Autoplay in pausa al passaggio del mouse e col focus da tastiera; con "riduci animazioni" niente autoplay e transizioni immediate.
+- Swiper viene chiuso quando Elementor ridisegna il widget nell'editor.
+
 ## 0.3.0
 - Step 3: stili *Marquee* e *Doppia riga*. Scorrimento continuo solo CSS (lista + copia con aria-hidden, spostamento di -50%), senza stacchi a ogni giro.
 - Durata di un giro, direzione (nella doppia riga la seconda riga va al contrario), pausa al passaggio del mouse e col focus da tastiera, sfumatura ai bordi con mask-image e larghezza regolabile per dispositivo.

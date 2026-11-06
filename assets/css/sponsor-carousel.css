@@ -177,6 +177,97 @@
 	}
 }
 
+/* ---------- Slider ---------- */
+
+/* Lo spazio per le frecce è ai lati: le frecce non coprono i loghi */
+.lu3g-sc--slider {
+	position: relative;
+}
+
+.lu3g-sc--slider:has(.lu3g-sc__arrow) .lu3g-sc__swiper {
+	margin-inline: var(--lu3g-sc-arrow-space, 44px);
+}
+
+.lu3g-sc--slider .lu3g-sc__swiper {
+	overflow: hidden;
+}
+
+.lu3g-sc--slider .lu3g-sc__item {
+	display: flex;
+	align-items: var(--lu3g-sc-align, center);
+	justify-content: center;
+	height: auto;
+}
+
+.lu3g-sc--slider .lu3g-sc__logo {
+	width: 100%;
+}
+
+.lu3g-sc .lu3g-sc__arrow {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--lu3g-sc-arrow-size, 36px);
+	height: var(--lu3g-sc-arrow-size, 36px);
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	box-shadow: none;
+	color: var(--lu3g-sc-arrow-color, currentColor);
+	font-size: calc(var(--lu3g-sc-arrow-size, 36px) * 0.6);
+	line-height: 1;
+	cursor: pointer;
+	transform: translateY(-50%);
+}
+
+.lu3g-sc .lu3g-sc__arrow--prev {
+	left: 0;
+}
+
+.lu3g-sc .lu3g-sc__arrow--next {
+	right: 0;
+}
+
+.lu3g-sc .lu3g-sc__arrow--next svg {
+	transform: scaleX(-1);
+}
+
+.lu3g-sc .lu3g-sc__arrow:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+/* Swiper aggiunge "swiper-button-disabled" agli estremi quando il ciclo è spento */
+.lu3g-sc .lu3g-sc__arrow.swiper-button-disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
+.lu3g-sc .lu3g-sc__dots {
+	position: static;
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.lu3g-sc .lu3g-sc__dots .swiper-pagination-bullet {
+	width: var(--lu3g-sc-dot-size, 8px);
+	height: var(--lu3g-sc-dot-size, 8px);
+	margin: 0;
+	background: var(--lu3g-sc-dot-color, currentColor);
+	opacity: 0.3;
+}
+
+.lu3g-sc .lu3g-sc__dots .swiper-pagination-bullet-active {
+	opacity: 1;
+}
+
 /* Segnaposto nell'editor */
 .lu3g-sc--placeholder {
 	padding: 24px;
