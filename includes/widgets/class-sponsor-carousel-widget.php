@@ -2,8 +2,7 @@
 /**
  * Widget Elementor: LU3G Sponsor Carousel.
  *
- * Stili pronti: griglia, marquee, doppia riga, slider (Swiper di Elementor). Gli altri sono già nel selettore e, finché non sono
- * pronti, vengono mostrati come griglia con un avviso nell'editor.
+ * Stili: griglia, marquee, doppia riga, slider (Swiper di Elementor), logo wall.
  *
  * Solo render(), senza content_template(): il markup usa wp_get_attachment_image (srcset, width e
  * height per evitare il layout shift) e le misure lette dagli SVG, che in JavaScript andrebbero
@@ -31,7 +30,7 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	/**
 	 * Stili già pronti; gli altri, per ora, si vedono come griglia.
 	 */
-	const READY_STYLES = array( 'griglia', 'marquee', 'doppia_riga', 'slider' );
+	const READY_STYLES = array( 'griglia', 'marquee', 'doppia_riga', 'slider', 'logo_wall' );
 
 	/**
 	 * Nome interno del widget (usato anche dall'hook JS frontend/element_ready/<nome>.default).
@@ -248,16 +247,6 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
-			'style_not_ready',
-			array(
-				'type'            => Controls_Manager::RAW_HTML,
-				'raw'             => esc_html__( 'Questo stile arriva nei prossimi aggiornamenti: per ora i loghi si vedono come griglia.', 'lu3g-sponsor-carousel' ),
-				'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-				'condition'       => array( 'style!' => self::READY_STYLES ),
-			)
-		);
-
-		$this->add_control(
 			'use_alt_logo',
 			array(
 				'label'        => esc_html__( 'Usa il logo alternativo', 'lu3g-sponsor-carousel' ),
@@ -456,6 +445,69 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
+		$wall = array( 'style' => 'logo_wall' );
+
+		$this->add_responsive_control(
+			'wall_slots',
+			array(
+				'label'              => esc_html__( 'Loghi visibili (slot)', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::NUMBER,
+				'min'                => 1,
+				'max'                => 24,
+				'step'               => 1,
+				'default'            => 6,
+				'tablet_default'     => 4,
+				'mobile_default'     => 4,
+				'frontend_available' => true,
+				'selectors'          => array( '{{WRAPPER}}' => '--lu3g-sc-wall-slots: {{VALUE}};' ),
+				'condition'          => $wall,
+			)
+		);
+
+		$this->add_responsive_control(
+			'wall_columns',
+			array(
+				'label'       => esc_html__( 'Colonne', 'lu3g-sponsor-carousel' ),
+				'type'        => Controls_Manager::NUMBER,
+				'min'         => 1,
+				'max'         => 12,
+				'step'        => 1,
+				'description' => esc_html__( 'Vuoto = tutti gli slot su una riga.', 'lu3g-sponsor-carousel' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--lu3g-sc-wall-columns: {{VALUE}};' ),
+				'condition'   => $wall,
+			)
+		);
+
+		$this->add_control(
+			'wall_interval',
+			array(
+				'label'              => esc_html__( 'Intervallo di sostituzione (ms)', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::NUMBER,
+				'min'                => 500,
+				'max'                => 20000,
+				'step'               => 100,
+				'default'            => 2500,
+				'frontend_available' => true,
+				'description'        => esc_html__( 'Ogni volta un logo a caso lascia il posto a uno che non si vede. Si ferma al passaggio del mouse e col focus da tastiera.', 'lu3g-sponsor-carousel' ),
+				'condition'          => $wall,
+			)
+		);
+
+		$this->add_control(
+			'wall_fade',
+			array(
+				'label'              => esc_html__( 'Durata della dissolvenza (ms)', 'lu3g-sponsor-carousel' ),
+				'type'               => Controls_Manager::NUMBER,
+				'min'                => 0,
+				'max'                => 3000,
+				'step'               => 50,
+				'default'            => 600,
+				'frontend_available' => true,
+				'selectors'          => array( '{{WRAPPER}}' => '--lu3g-sc-swap: {{VALUE}}ms;' ),
+				'condition'          => $wall,
+			)
+		);
+
 		$this->end_controls_section();
 	}
 
@@ -560,7 +612,6 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 
 		$style = isset( $this->lu3g_sc_styles()[ $settings['style'] ] ) ? $settings['style'] : 'marquee';
 
-		// Stili non ancora pronti: per ora griglia (l'avviso è nel pannello).
 		$layout = in_array( $style, self::READY_STYLES, true ) ? $style : 'griglia';
 
 		// Doppia riga con un solo logo: una riga sola.
@@ -594,7 +645,9 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 
 		echo '<div ' . $this->get_render_attribute_string( 'wrapper' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput
 
-		if ( 'griglia' === $layout ) {
+		if ( 'griglia' === $layout || 'logo_wall' === $layout ) {
+			// Logo wall: senza JS (o con movimento ridotto) è una griglia con tutti i loghi; il JS
+			// lascia visibili gli slot e mette da parte gli altri.
 			echo $this->lu3g_sc_list( $items ); // phpcs:ignore WordPress.Security.EscapeOutput
 		} elseif ( 'slider' === $layout ) {
 			echo $this->lu3g_sc_slider( $items, $settings ); // phpcs:ignore WordPress.Security.EscapeOutput

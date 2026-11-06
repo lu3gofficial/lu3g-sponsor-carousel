@@ -12,6 +12,11 @@
  *
  * Slider: Swiper di Elementor (elementorFrontend.utils.swiper, che carica Swiper 5 o 8 secondo la
  * versione), con le opzioni dei controlli lette da getElementSettings() (controlli frontend_available).
+ *
+ * Logo wall: il markup ha tutti i loghi in griglia (così resta anche senza JS e con movimento ridotto).
+ * Qui restano visibili i primi N elementi (slot, per dispositivo); gli altri sono messi da parte. A ogni
+ * intervallo il logo di uno slot a caso svanisce e al suo posto entra un logo messo da parte: ogni logo
+ * esiste una volta sola, quindi a schermo non ce ne sono mai due uguali.
  */
 ( function () {
 	'use strict';
@@ -140,6 +145,65 @@
 		return config;
 	}
 
+	/**
+	 * Valore di un controllo responsive per la larghezza attuale (punti di passaggio di Elementor).
+	 *
+	 * @param {Object} settings Impostazioni del widget.
+	 * @param {string} key      Nome del controllo.
+	 * @param {number} def      Valore predefinito.
+	 * @return {number}
+	 */
+	function responsiveNumber( settings, key, def ) {
+		var bp = ( window.elementorFrontend && window.elementorFrontend.config && window.elementorFrontend.config.responsive && window.elementorFrontend.config.responsive.activeBreakpoints ) || {};
+		var width = window.innerWidth;
+		var num = function ( value ) {
+			var n = parseInt( value, 10 );
+			return isNaN( n ) || n < 1 ? null : n;
+		};
+		var desktop = num( settings[ key ] ) || def;
+		var tablet = num( settings[ key + '_tablet' ] ) || desktop;
+		var mobile = num( settings[ key + '_mobile' ] ) || tablet;
+
+		if ( width <= ( bp.mobile ? bp.mobile.value : 767 ) ) {
+			return mobile;
+		}
+
+		if ( width <= ( bp.tablet ? bp.tablet.value : 1024 ) ) {
+			return tablet;
+		}
+
+		return desktop;
+	}
+
+	/**
+	 * Prepara il logo in arrivo: se l'immagine non è ancora caricata (loading="lazy" su un elemento
+	 * nascosto) la carica prima, così entra già intera.
+	 *
+	 * @param {HTMLElement} logo Logo (.lu3g-sc__logo).
+	 * @param {Function}    done Da chiamare quando è pronto.
+	 */
+	function whenLoaded( logo, done ) {
+		var img = logo.querySelector( 'img' );
+
+		if ( ! img || img.complete ) {
+			done();
+			return;
+		}
+
+		var called = false;
+		var finish = function () {
+			if ( ! called ) {
+				called = true;
+				done();
+			}
+		};
+
+		img.setAttribute( 'loading', 'eager' );
+		img.addEventListener( 'load', finish, { once: true } );
+		img.addEventListener( 'error', finish, { once: true } );
+		window.setTimeout( finish, 4000 );
+	}
+
 	function register() {
 		var Base = window.elementorModules && window.elementorModules.frontend.handlers.Base;
 
@@ -154,10 +218,19 @@
 			onInit: function () {
 				Base.prototype.onInit.apply( this, arguments );
 
+				this.timers = [];
+
 				var slider = this.$element[ 0 ].querySelector( '.lu3g-sc--slider' );
 
 				if ( slider ) {
 					this.lu3gInitSlider( slider );
+					return;
+				}
+
+				var wall = this.$element[ 0 ].querySelector( '.lu3g-sc--logo_wall' );
+
+				if ( wall ) {
+					this.lu3gInitWall( wall );
 					return;
 				}
 
@@ -195,6 +268,117 @@
 						img.addEventListener( 'load', fill, { once: true } );
 					}
 				} );
+			},
+
+			/**
+			 * Logo wall.
+			 *
+			 * @param {HTMLElement} root Contenitore del widget.
+			 */
+			lu3gInitWall: function ( root ) {
+				var self = this;
+				var settings = this.getElementSettings();
+				var items = Array.prototype.slice.call( root.querySelectorAll( '.lu3g-sc__item' ) );
+				var reduced = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+				var interval = Math.max( 500, parseInt( settings.wall_interval, 10 ) || 2500 );
+				var fade = Math.max( 0, parseInt( settings.wall_fade, 10 ) );
+				var paused = false;
+				var busy = false;
+				var lastSlot = -1;
+				var slots = 0;
+
+				if ( isNaN( fade ) ) {
+					fade = 600;
+				}
+
+				// Movimento ridotto: resta la griglia con tutti i loghi.
+				if ( reduced || items.length < 2 ) {
+					return;
+				}
+
+				// Primi N elementi visibili, gli altri da parte.
+				var layout = function () {
+					slots = Math.min( responsiveNumber( settings, 'wall_slots', 6 ), items.length );
+					items.forEach( function ( item, n ) {
+						item.classList.toggle( 'is-pooled', n >= slots );
+					} );
+				};
+
+				var swap = function () {
+					if ( paused || busy || document.hidden || slots >= items.length ) {
+						return;
+					}
+
+					var pool = items.slice( slots );
+					var slot = Math.floor( Math.random() * slots );
+
+					// Mai lo stesso slot due volte di fila, se ce n'è più di uno.
+					if ( slots > 1 && slot === lastSlot ) {
+						slot = ( slot + 1 + Math.floor( Math.random() * ( slots - 1 ) ) ) % slots;
+					}
+
+					var target = items[ slot ];
+					var source = pool[ Math.floor( Math.random() * pool.length ) ];
+					var outgoing = target.querySelector( '.lu3g-sc__logo' );
+					var incoming = source.querySelector( '.lu3g-sc__logo' );
+
+					if ( ! outgoing || ! incoming ) {
+						return;
+					}
+
+					busy = true;
+					lastSlot = slot;
+
+					whenLoaded( incoming, function () {
+						outgoing.classList.add( 'is-leaving' );
+
+						self.timers.push( window.setTimeout( function () {
+							// Scambio dei loghi: quello uscito va da parte, quello nuovo entra trasparente e compare.
+							incoming.classList.add( 'is-leaving' );
+							source.appendChild( outgoing );
+							target.appendChild( incoming );
+							outgoing.classList.remove( 'is-leaving' );
+							void incoming.offsetWidth; // nuovo calcolo: la dissolvenza in entrata parte da 0
+							incoming.classList.remove( 'is-leaving' );
+							busy = false;
+						}, fade ) );
+					} );
+				};
+
+				layout();
+				this.timers.push( window.setInterval( swap, interval ) );
+
+				// Pausa al passaggio del mouse e col focus da tastiera.
+				root.addEventListener( 'mouseenter', function () {
+					paused = true;
+				} );
+				root.addEventListener( 'mouseleave', function () {
+					paused = root.contains( document.activeElement );
+				} );
+				root.addEventListener( 'focusin', function () {
+					paused = true;
+				} );
+				root.addEventListener( 'focusout', function () {
+					window.setTimeout( function () {
+						paused = root.contains( document.activeElement ) || root.matches( ':hover' );
+					}, 0 );
+				} );
+
+				// Il numero di slot cambia col dispositivo.
+				if ( window.ResizeObserver ) {
+					var lastWidth = 0;
+
+					this.lu3gObserver = new window.ResizeObserver( function () {
+						if ( window.innerWidth !== lastWidth ) {
+							lastWidth = window.innerWidth;
+							layout();
+						}
+					} );
+					this.lu3gObserver.observe( root );
+				}
+
+				// Per le prove: la sostituzione si può chiamare a mano.
+				this.lu3gSwap = swap;
 			},
 
 			/**
@@ -275,6 +459,12 @@
 			 */
 			onDestroy: function () {
 				this.lu3gDestroyed = true;
+
+				( this.timers || [] ).forEach( function ( id ) {
+					window.clearInterval( id );
+					window.clearTimeout( id );
+				} );
+				this.timers = [];
 
 				if ( this.lu3gSwiper ) {
 					this.lu3gSwiper.destroy( true, true );

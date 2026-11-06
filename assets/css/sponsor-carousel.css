@@ -10,6 +10,8 @@
  *   --lu3g-sc-columns      colonne della griglia
  *   --lu3g-sc-duration     durata di un giro del marquee
  *   --lu3g-sc-fade         larghezza della sfumatura ai bordi
+ *   --lu3g-sc-wall-slots   slot del logo wall, --lu3g-sc-wall-columns sue colonne
+ *   --lu3g-sc-swap         durata della dissolvenza del logo wall
  * e dal JS:
  *   --lu3g-sc-repeat       quante volte i loghi sono ripetuti per riempire la riga
  */
@@ -84,6 +86,37 @@
 /* Il logo occupa la cella: serve agli SVG senza misure, che altrimenti restano larghi 0 */
 .lu3g-sc--griglia .lu3g-sc__logo {
 	width: 100%;
+}
+
+/* ---------- Logo wall ---------- */
+
+.lu3g-sc--logo_wall .lu3g-sc__list {
+	display: grid;
+	grid-template-columns: repeat(var(--lu3g-sc-wall-columns, var(--lu3g-sc-wall-slots, 6)), minmax(0, 1fr));
+	gap: var(--lu3g-sc-gap, 32px);
+	align-items: var(--lu3g-sc-align, center);
+}
+
+.lu3g-sc--logo_wall .lu3g-sc__item {
+	display: flex;
+	align-items: var(--lu3g-sc-align, center);
+	justify-content: center;
+	min-width: 0;
+}
+
+.lu3g-sc--logo_wall .lu3g-sc__logo {
+	width: 100%;
+	transition: opacity var(--lu3g-sc-swap, 600ms) ease;
+}
+
+/* Il logo in uscita svanisce, quello in entrata compare al suo posto */
+.lu3g-sc--logo_wall .lu3g-sc__logo.is-leaving {
+	opacity: 0;
+}
+
+/* Loghi messi da parte dal JS: non visibili, pronti a entrare */
+.lu3g-sc--logo_wall .lu3g-sc__item.is-pooled {
+	display: none;
 }
 
 /* ---------- Marquee e doppia riga ---------- */
@@ -169,6 +202,14 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		padding-inline-end: 0;
+	}
+
+	.lu3g-sc--logo_wall .lu3g-sc__item.is-pooled {
+		display: flex;
+	}
+
+	.lu3g-sc--logo_wall .lu3g-sc__logo {
+		transition: none;
 	}
 
 	.lu3g-sc--moving .lu3g-sc__list[aria-hidden="true"],

@@ -1,5 +1,12 @@
 # Registro delle modifiche
 
+## 0.5.0
+- Step 5: stile *Logo wall*. Slot visibili per dispositivo e colonne (vuoto = tutti gli slot su una riga); a ogni intervallo un logo a caso svanisce e al suo posto entra uno che non si vede, mai due uguali a schermo e mai lo stesso slot due volte di fila.
+- Intervallo di sostituzione e durata della dissolvenza; pausa al passaggio del mouse e col focus da tastiera; niente sostituzioni a scheda nascosta.
+- Un logo in arrivo non ancora caricato viene caricato prima di entrare.
+- Senza JavaScript o con movimento ridotto: griglia statica con tutti i loghi.
+- Tutti gli stili sono pronti: tolto l'avviso "stile non ancora pronto".
+
 ## 0.4.0
 - Step 4: stile *Slider* con lo Swiper incluso in Elementor (elementorFrontend.utils.swiper), senza caricarne un altro. Classe del contenitore giusta per Swiper 5 o 8 (funzione "e_swiper_latest" e elementorFrontend.config.swiperClass); CSS di Swiper caricato solo con lo slider.
 - Loghi visibili per desktop, tablet e mobile (punti di passaggio di Elementor), autoplay con intervallo, ciclo infinito (spento da solo se i loghi non bastano), frecce, pallini, velocità della transizione. Spazio tra i loghi dalla spaziatura dello stile.
