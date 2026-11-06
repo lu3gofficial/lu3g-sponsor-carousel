@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       LU3G Sponsor Carousel
  * Description:       Widget Elementor per i loghi degli sponsor: marquee, doppia riga, slider, logo wall e griglia.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Plugin URI:        https://github.com/lu3gofficial/lu3g-sponsor-carousel
  * Update URI:        https://github.com/lu3gofficial/lu3g-sponsor-carousel
  * Author:            LU3G Agenzia Web
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LU3G_SC_VERSION', '1.0.0' );
+define( 'LU3G_SC_VERSION', '1.1.0' );
 define( 'LU3G_SC_FILE', __FILE__ );
 define( 'LU3G_SC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'LU3G_SC_URL', plugin_dir_url( __FILE__ ) );

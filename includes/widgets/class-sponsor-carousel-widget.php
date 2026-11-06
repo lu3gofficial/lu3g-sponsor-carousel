@@ -460,6 +460,31 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
+		// Blocco per dispositivo, solo CSS: il valore diventa un gruppo di variabili (--lu3g-sc-*) che
+		// Elementor scrive nelle media query di ogni dispositivo. Vuoto = come il dispositivo più grande.
+		$this->add_responsive_control(
+			'motion_lock',
+			array(
+				'label'                => esc_html__( 'Blocca lo scorrimento', 'lu3g-sponsor-carousel' ),
+				'type'                 => Controls_Manager::SELECT,
+				'options'              => array(
+					'no'  => esc_html__( 'No, scorre', 'lu3g-sponsor-carousel' ),
+					'yes' => esc_html__( 'Sì, loghi fermi', 'lu3g-sponsor-carousel' ),
+				),
+				'default'              => 'no',
+				'tablet_default'       => '',
+				'mobile_default'       => '',
+				'separator'            => 'before',
+				'description'          => esc_html__( 'Si sceglie per ogni dispositivo. Fermi: marquee e doppia riga diventano righe di loghi centrate (vanno a capo se non ci stanno), il logo wall non sostituisce più i loghi, lo slider non scorre da solo (frecce e pallini restano).', 'lu3g-sponsor-carousel' ),
+				'selectors_dictionary' => array(
+					'yes' => '--lu3g-sc-anim: none; --lu3g-sc-copy: none; --lu3g-sc-wrap: wrap; --lu3g-sc-track-w: auto; --lu3g-sc-justify: center; --lu3g-sc-mask: none; --lu3g-sc-list-end: 0px; --lu3g-sc-pause-btn: none; --lu3g-sc-list-flex: 1 1 100%; --lu3g-sc-locked: 1;',
+					'no'  => '--lu3g-sc-anim: lu3g-sc-marquee; --lu3g-sc-copy: flex; --lu3g-sc-wrap: nowrap; --lu3g-sc-track-w: max-content; --lu3g-sc-justify: flex-start; --lu3g-sc-mask: initial; --lu3g-sc-list-end: var(--lu3g-sc-gap, 32px); --lu3g-sc-pause-btn: flex; --lu3g-sc-list-flex: none; --lu3g-sc-locked: 0;',
+				),
+				'selectors'            => array( '{{WRAPPER}}' => '{{VALUE}}' ),
+				'condition'            => array( 'style' => array( 'marquee', 'doppia_riga', 'slider', 'logo_wall' ) ),
+			)
+		);
+
 		$this->add_control(
 			'pause_button',
 			array(

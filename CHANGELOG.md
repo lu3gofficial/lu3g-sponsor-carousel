@@ -1,5 +1,8 @@
 # Registro delle modifiche
 
+## 1.1.0
+- *Layout → Blocca lo scorrimento*, per desktop, tablet e mobile (vuoto = come il dispositivo più grande). Con "Sì, loghi fermi": marquee e doppia riga diventano righe di loghi centrate che vanno a capo, senza copie né sfumatura; il logo wall non sostituisce più i loghi; lo slider non scorre da solo (frecce e pallini restano); il pulsante pausa sparisce. Funziona con il solo CSS (media query di Elementor), quindi vale da subito e si vede nell'editor cambiando dispositivo.
+
 ## 1.0.0
 - Step 7, rifinitura: prima versione completa.
 - *Pulsante pausa* facoltativo (Layout) per marquee, doppia riga, logo wall e slider con autoplay: ferma e riprende il movimento, con aria-pressed ed etichetta che cambia. Richiesto dalle regole di accessibilità (WCAG 2.2.2) per i contenuti che si muovono da soli; su telefono non c'è il passaggio del mouse.

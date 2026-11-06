@@ -15,6 +15,9 @@
  *   --lu3g-sc-gray, --lu3g-sc-opacity, --lu3g-sc-scale (e -h per l'hover), --lu3g-sc-transition  effetto
  *   --lu3g-sc-arrow-size, --lu3g-sc-dot-size, --lu3g-sc-dot-color, --lu3g-sc-dot-active,
  *   --lu3g-sc-dots-align, --lu3g-sc-dots-space  frecce e pallini · --lu3g-sc-tip-bg  tooltip
+ *   "Blocca lo scorrimento" (per dispositivo): --lu3g-sc-anim, --lu3g-sc-copy, --lu3g-sc-wrap, --lu3g-sc-track-w,
+ *   --lu3g-sc-justify, --lu3g-sc-mask, --lu3g-sc-list-end, --lu3g-sc-list-flex, --lu3g-sc-pause-btn,
+ *   --lu3g-sc-locked (letto dal JS)
  * e dal JS:
  *   --lu3g-sc-repeat       quante volte i loghi sono ripetuti per riempire la riga
  */
@@ -172,13 +175,26 @@
 	mask-image: linear-gradient(to right, transparent, #000 var(--lu3g-sc-fade, 80px), #000 calc(100% - var(--lu3g-sc-fade, 80px)), transparent);
 }
 
+/* Bloccato: niente sfumatura (i loghi sono fermi e interi) */
+.lu3g-sc--fade .lu3g-sc__row[class] {
+	-webkit-mask-image: var(--lu3g-sc-mask, linear-gradient(to right, transparent, #000 var(--lu3g-sc-fade, 80px), #000 calc(100% - var(--lu3g-sc-fade, 80px)), transparent));
+	mask-image: var(--lu3g-sc-mask, linear-gradient(to right, transparent, #000 var(--lu3g-sc-fade, 80px), #000 calc(100% - var(--lu3g-sc-fade, 80px)), transparent));
+}
+
 /* Traccia = lista + copia. Spostandola di -50% (una lista) e ripartendo, il giro non ha stacchi:
    per questo ogni lista finisce con la stessa spaziatura che c'è tra i loghi. */
 .lu3g-sc__track {
 	display: flex;
-	width: max-content;
-	animation: lu3g-sc-marquee calc(var(--lu3g-sc-duration, 30s) * var(--lu3g-sc-repeat, 1)) linear infinite;
+	justify-content: var(--lu3g-sc-justify, flex-start);
+	width: var(--lu3g-sc-track-w, max-content);
+	animation: var(--lu3g-sc-anim, lu3g-sc-marquee) calc(var(--lu3g-sc-duration, 30s) * var(--lu3g-sc-repeat, 1)) linear infinite;
 	will-change: transform;
+}
+
+/* Bloccato: resta solo la lista originale (la copia e le ripetizioni servono solo allo scorrimento) */
+.lu3g-sc--moving .lu3g-sc__list[aria-hidden="true"],
+.lu3g-sc--moving .lu3g-sc__item.lu3g-sc__item--clone {
+	display: var(--lu3g-sc-copy, flex);
 }
 
 .lu3g-sc__row--reverse .lu3g-sc__track {
@@ -187,10 +203,12 @@
 
 .lu3g-sc--moving .lu3g-sc__list {
 	display: flex;
-	flex: none;
+	flex: var(--lu3g-sc-list-flex, none);
+	flex-wrap: var(--lu3g-sc-wrap, nowrap);
+	justify-content: var(--lu3g-sc-justify, flex-start);
 	align-items: var(--lu3g-sc-align, center);
 	gap: var(--lu3g-sc-gap, 32px);
-	padding-inline-end: var(--lu3g-sc-gap, 32px);
+	padding-inline-end: var(--lu3g-sc-list-end, var(--lu3g-sc-gap, 32px));
 }
 
 .lu3g-sc--moving .lu3g-sc__item {
@@ -246,7 +264,7 @@
 	}
 
 	/* Con il movimento ridotto non si muove nulla: il pulsante pausa non serve */
-	.lu3g-sc .lu3g-sc__pause {
+	.lu3g-sc .lu3g-sc__pause[class] {
 		display: none;
 	}
 
@@ -415,6 +433,11 @@
 	font-size: 12px;
 	line-height: 1;
 	cursor: pointer;
+}
+
+/* Bloccato: non si muove nulla, il pulsante non serve */
+.lu3g-sc .lu3g-sc__pause[class] {
+	display: var(--lu3g-sc-pause-btn, flex);
 }
 
 .lu3g-sc .lu3g-sc__pause:focus-visible {

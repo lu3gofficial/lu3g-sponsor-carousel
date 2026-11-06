@@ -22,6 +22,17 @@
 	'use strict';
 
 	/**
+	 * "Blocca lo scorrimento" vale per il dispositivo attuale? Il CSS di Elementor scrive
+	 * --lu3g-sc-locked: 1 nella media query del dispositivo in cui è attivo.
+	 *
+	 * @param {HTMLElement} root Contenitore del widget.
+	 * @return {boolean}
+	 */
+	function isLocked( root ) {
+		return '1' === window.getComputedStyle( root ).getPropertyValue( '--lu3g-sc-locked' ).trim();
+	}
+
+	/**
 	 * Riempie una riga del marquee.
 	 *
 	 * @param {HTMLElement} row Riga (.lu3g-sc__row).
@@ -38,6 +49,13 @@
 			clone.remove();
 		} );
 		row.style.removeProperty( '--lu3g-sc-repeat' );
+
+		// Bloccato su questo dispositivo: i loghi sono fermi, ripeterli non serve.
+		var root = row.closest( '.lu3g-sc' );
+
+		if ( root && isLocked( root ) ) {
+			return;
+		}
 
 		var originals = Array.prototype.slice.call( lists[ 0 ].children );
 		var setWidth = lists[ 0 ].getBoundingClientRect().width;
@@ -395,7 +413,7 @@
 				};
 
 				var swap = function () {
-					if ( paused || busy || document.hidden || slots >= items.length || root.classList.contains( 'lu3g-sc--paused' ) ) {
+					if ( paused || busy || document.hidden || slots >= items.length || root.classList.contains( 'lu3g-sc--paused' ) || isLocked( root ) ) {
 						return;
 					}
 
@@ -517,8 +535,21 @@
 						}
 					};
 					var start = function () {
-						if ( swiper.autoplay && ! root.classList.contains( 'lu3g-sc--paused' ) && ! root.contains( document.activeElement ) && ! root.matches( ':hover' ) ) {
+						if ( swiper.autoplay && ! isLocked( root ) && ! root.classList.contains( 'lu3g-sc--paused' ) && ! root.contains( document.activeElement ) && ! root.matches( ':hover' ) ) {
 							swiper.autoplay.start();
+						}
+					};
+
+					// Bloccato su questo dispositivo: niente autoplay; si ricontrolla quando cambia la larghezza.
+					if ( isLocked( root ) ) {
+						stop();
+					}
+
+					self.lu3gSliderLock = function () {
+						if ( isLocked( root ) ) {
+							stop();
+						} else {
+							start();
 						}
 					};
 
@@ -547,6 +578,10 @@
 						if ( swiper && swiper.params && swiper.params.spaceBetween !== gap ) {
 							swiper.params.spaceBetween = gap;
 							swiper.update();
+						}
+
+						if ( self.lu3gSliderLock ) {
+							self.lu3gSliderLock();
 						}
 					} );
 					this.lu3gObserver.observe( root );
