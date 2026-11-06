@@ -8,6 +8,10 @@
  *   --lu3g-sc-gap          spaziatura tra i loghi
  *   --lu3g-sc-align        allineamento verticale
  *   --lu3g-sc-columns      colonne della griglia
+ *   --lu3g-sc-duration     durata di un giro del marquee
+ *   --lu3g-sc-fade         larghezza della sfumatura ai bordi
+ * e dal JS:
+ *   --lu3g-sc-repeat       quante volte i loghi sono ripetuti per riempire la riga
  */
 
 /* I predefiniti stanno nei var(--x, predefinito): una variabile dichiarata qui coprirebbe
@@ -80,6 +84,97 @@
 /* Il logo occupa la cella: serve agli SVG senza misure, che altrimenti restano larghi 0 */
 .lu3g-sc--griglia .lu3g-sc__logo {
 	width: 100%;
+}
+
+/* ---------- Marquee e doppia riga ---------- */
+
+.lu3g-sc--moving {
+	display: flex;
+	flex-direction: column;
+	gap: var(--lu3g-sc-gap, 32px);
+}
+
+.lu3g-sc__row {
+	overflow: hidden;
+}
+
+/* Sfumatura ai bordi: i loghi svaniscono verso i lati, con qualsiasi colore di sfondo */
+.lu3g-sc--fade .lu3g-sc__row {
+	-webkit-mask-image: linear-gradient(to right, transparent, #000 var(--lu3g-sc-fade, 80px), #000 calc(100% - var(--lu3g-sc-fade, 80px)), transparent);
+	mask-image: linear-gradient(to right, transparent, #000 var(--lu3g-sc-fade, 80px), #000 calc(100% - var(--lu3g-sc-fade, 80px)), transparent);
+}
+
+/* Traccia = lista + copia. Spostandola di -50% (una lista) e ripartendo, il giro non ha stacchi:
+   per questo ogni lista finisce con la stessa spaziatura che c'è tra i loghi. */
+.lu3g-sc__track {
+	display: flex;
+	width: max-content;
+	animation: lu3g-sc-marquee calc(var(--lu3g-sc-duration, 30s) * var(--lu3g-sc-repeat, 1)) linear infinite;
+	will-change: transform;
+}
+
+.lu3g-sc__row--reverse .lu3g-sc__track {
+	animation-direction: reverse;
+}
+
+.lu3g-sc--moving .lu3g-sc__list {
+	display: flex;
+	flex: none;
+	align-items: var(--lu3g-sc-align, center);
+	gap: var(--lu3g-sc-gap, 32px);
+	padding-inline-end: var(--lu3g-sc-gap, 32px);
+}
+
+.lu3g-sc--moving .lu3g-sc__item {
+	display: flex;
+	flex: none;
+	align-items: var(--lu3g-sc-align, center);
+}
+
+/* SVG senza misure: nel marquee non c'è una cella da riempire, si dà una proporzione 2:1 */
+.lu3g-sc--moving .lu3g-sc__img:not([width]) {
+	width: calc(var(--lu3g-sc-logo-height, 60px) * 2);
+}
+
+/* Pausa al passaggio del mouse e col focus da tastiera */
+.lu3g-sc--pause .lu3g-sc__row:hover .lu3g-sc__track,
+.lu3g-sc--pause .lu3g-sc__row:focus-within .lu3g-sc__track {
+	animation-play-state: paused;
+}
+
+@keyframes lu3g-sc-marquee {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+/* Movimento ridotto: niente scorrimento, i loghi vanno a capo come una griglia e la copia sparisce */
+@media (prefers-reduced-motion: reduce) {
+	.lu3g-sc--moving .lu3g-sc__row {
+		-webkit-mask-image: none;
+		mask-image: none;
+	}
+
+	.lu3g-sc--moving .lu3g-sc__track {
+		width: auto;
+		animation: none;
+		transform: none;
+	}
+
+	.lu3g-sc--moving .lu3g-sc__list {
+		flex-wrap: wrap;
+		justify-content: center;
+		padding-inline-end: 0;
+	}
+
+	.lu3g-sc--moving .lu3g-sc__list[aria-hidden="true"],
+	.lu3g-sc--moving .lu3g-sc__item--clone {
+		display: none;
+	}
 }
 
 /* Segnaposto nell'editor */

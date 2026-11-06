@@ -11,7 +11,7 @@ Il plugin si costruisce a step, ognuno pubblicato come release da provare:
 
 1. ✅ Bootstrap, controllo di Elementor, categoria "LU3G", widget vuoto (0.1.0)
 2. ✅ Repeater dei loghi e stile griglia (0.2.0)
-3. Marquee e doppia riga, con sfumatura ai bordi
+3. ✅ Marquee e doppia riga, con sfumatura ai bordi (0.3.0)
 4. Slider con lo Swiper di Elementor
 5. Logo wall
 6. Tab Stile completo, effetti hover, tooltip

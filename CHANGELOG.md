@@ -1,5 +1,13 @@
 # Registro delle modifiche
 
+## 0.3.0
+- Step 3: stili *Marquee* e *Doppia riga*. Scorrimento continuo solo CSS (lista + copia con aria-hidden, spostamento di -50%), senza stacchi a ogni giro.
+- Durata di un giro, direzione (nella doppia riga la seconda riga va al contrario), pausa al passaggio del mouse e col focus da tastiera, sfumatura ai bordi con mask-image e larghezza regolabile per dispositivo.
+- Con pochi loghi la riga viene riempita ripetendoli (ripetizioni nascoste agli screen reader e fuori dal Tab) e la durata cresce nella stessa misura: la velocità resta quella scelta.
+- Doppia riga: loghi alternati tra le due righe; con un solo logo, una riga.
+- Nel marquee i loghi si caricano subito (non lazy), per non vederli comparire mentre scorrono.
+- Movimento ridotto: niente scorrimento, i loghi vanno a capo come una griglia.
+
 ## 0.2.0
 - Step 2: repeater dei loghi (logo, logo alternativo, nome, link con rel="sponsored noopener" e nuova scheda dalle opzioni del link) e stile *Griglia* con colonne per dispositivo.
 - *Usa il logo alternativo*, dimensione dell'immagine, nome della lista per gli screen reader.

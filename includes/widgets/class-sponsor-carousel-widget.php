@@ -2,8 +2,8 @@
 /**
  * Widget Elementor: LU3G Sponsor Carousel.
  *
- * Step 2: repeater dei loghi e stile "griglia". Gli altri stili sono già nel selettore e, finché
- * non sono pronti, vengono mostrati come griglia con un avviso nell'editor.
+ * Stili pronti: griglia, marquee, doppia riga. Gli altri sono già nel selettore e, finché non sono
+ * pronti, vengono mostrati come griglia con un avviso nell'editor.
  *
  * Solo render(), senza content_template(): il markup usa wp_get_attachment_image (srcset, width e
  * height per evitare il layout shift) e le misure lette dagli SVG, che in JavaScript andrebbero
@@ -31,7 +31,7 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	/**
 	 * Stili già pronti; gli altri, per ora, si vedono come griglia.
 	 */
-	const READY_STYLES = array( 'griglia' );
+	const READY_STYLES = array( 'griglia', 'marquee', 'doppia_riga' );
 
 	/**
 	 * Nome interno del widget (usato anche dall'hook JS frontend/element_ready/<nome>.default).
@@ -274,6 +274,83 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
+		$marquee = array( 'style' => array( 'marquee', 'doppia_riga' ) );
+
+		$this->add_control(
+			'marquee_speed',
+			array(
+				'label'       => esc_html__( 'Durata di un giro (secondi)', 'lu3g-sponsor-carousel' ),
+				'type'        => Controls_Manager::SLIDER,
+				'size_units'  => array( 's' ),
+				'range'       => array( 's' => array( 'min' => 3, 'max' => 180, 'step' => 1 ) ),
+				'default'     => array( 'unit' => 's', 'size' => 30 ),
+				'description' => esc_html__( 'Tempo in cui scorrono tutti i loghi una volta: più alto = più lento.', 'lu3g-sponsor-carousel' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--lu3g-sc-duration: {{SIZE}}s;' ),
+				'condition'   => $marquee,
+			)
+		);
+
+		$this->add_control(
+			'marquee_direction',
+			array(
+				'label'       => esc_html__( 'Direzione', 'lu3g-sponsor-carousel' ),
+				'type'        => Controls_Manager::CHOOSE,
+				'options'     => array(
+					'left'  => array(
+						'title' => esc_html__( 'Verso sinistra', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-arrow-left',
+					),
+					'right' => array(
+						'title' => esc_html__( 'Verso destra', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-arrow-right',
+					),
+				),
+				'default'     => 'left',
+				'toggle'      => false,
+				'description' => esc_html__( 'Con la doppia riga, la seconda riga va nella direzione opposta.', 'lu3g-sponsor-carousel' ),
+				'condition'   => $marquee,
+			)
+		);
+
+		$this->add_control(
+			'marquee_pause',
+			array(
+				'label'        => esc_html__( 'Pausa al passaggio del mouse', 'lu3g-sponsor-carousel' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'description'  => esc_html__( 'Vale anche quando un logo riceve il focus da tastiera.', 'lu3g-sponsor-carousel' ),
+				'condition'    => $marquee,
+			)
+		);
+
+		$this->add_control(
+			'marquee_fade',
+			array(
+				'label'        => esc_html__( 'Sfumatura ai bordi', 'lu3g-sponsor-carousel' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'condition'    => $marquee,
+			)
+		);
+
+		$this->add_responsive_control(
+			'marquee_fade_width',
+			array(
+				'label'      => esc_html__( 'Larghezza della sfumatura', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%' ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 400 ),
+					'%'  => array( 'min' => 0, 'max' => 40 ),
+				),
+				'default'    => array( 'unit' => 'px', 'size' => 80 ),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-fade: {{SIZE}}{{UNIT}};' ),
+				'condition'  => $marquee + array( 'marquee_fade' => 'yes' ),
+			)
+		);
+
 		$this->end_controls_section();
 	}
 
@@ -381,24 +458,95 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 		// Stili non ancora pronti: per ora griglia (l'avviso è nel pannello).
 		$layout = in_array( $style, self::READY_STYLES, true ) ? $style : 'griglia';
 
+		// Doppia riga con un solo logo: una riga sola.
+		if ( 'doppia_riga' === $layout && count( $items ) < 2 ) {
+			$layout = 'marquee';
+		}
+
+		$classes = array( 'lu3g-sc', 'lu3g-sc--' . $layout );
+
+		if ( 'griglia' !== $layout ) {
+			$classes[] = 'lu3g-sc--moving';
+
+			if ( 'yes' === $settings['marquee_pause'] ) {
+				$classes[] = 'lu3g-sc--pause';
+			}
+
+			if ( 'yes' === $settings['marquee_fade'] ) {
+				$classes[] = 'lu3g-sc--fade';
+			}
+		}
+
 		$this->add_render_attribute(
 			'wrapper',
 			array(
-				'class'      => array( 'lu3g-sc', 'lu3g-sc--' . $layout ),
+				'class'      => $classes,
 				'data-style' => $style,
 				'role'       => 'region',
 				'aria-label' => $settings['list_label'] ? $settings['list_label'] : esc_html__( 'I nostri sponsor', 'lu3g-sponsor-carousel' ),
 			)
 		);
-		?>
-		<div <?php $this->print_render_attribute_string( 'wrapper' ); ?>>
-			<ul class="lu3g-sc__list">
-				<?php foreach ( $items as $item ) : ?>
-					<li class="lu3g-sc__item"><?php echo $item; // phpcs:ignore WordPress.Security.EscapeOutput -- markup costruito con esc_* in lu3g_sc_item_markup(). ?></li>
-				<?php endforeach; ?>
-			</ul>
-		</div>
-		<?php
+
+		echo '<div ' . $this->get_render_attribute_string( 'wrapper' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput
+
+		if ( 'griglia' === $layout ) {
+			echo $this->lu3g_sc_list( $items ); // phpcs:ignore WordPress.Security.EscapeOutput
+		} else {
+			$reverse = 'right' === $settings['marquee_direction'];
+
+			if ( 'doppia_riga' === $layout ) {
+				// Loghi alternati tra le due righe: 1, 3, 5... sopra e 2, 4, 6... sotto.
+				$rows = array( array(), array() );
+
+				foreach ( $items as $n => $item ) {
+					$rows[ $n % 2 ][] = $item;
+				}
+
+				echo $this->lu3g_sc_marquee_row( $rows[0], $reverse );  // phpcs:ignore WordPress.Security.EscapeOutput
+				echo $this->lu3g_sc_marquee_row( $rows[1], ! $reverse ); // phpcs:ignore WordPress.Security.EscapeOutput
+			} else {
+				echo $this->lu3g_sc_marquee_row( $items, $reverse ); // phpcs:ignore WordPress.Security.EscapeOutput
+			}
+		}
+
+		echo '</div>';
+	}
+
+	/**
+	 * Lista dei loghi.
+	 *
+	 * @param array $items Markup dei loghi.
+	 * @param bool  $copy  Copia per il marquee: nascosta agli screen reader e fuori dal Tab.
+	 * @return string
+	 */
+	private function lu3g_sc_list( array $items, $copy = false ) {
+		$out = $copy ? '<ul class="lu3g-sc__list" aria-hidden="true">' : '<ul class="lu3g-sc__list">';
+
+		foreach ( $items as $item ) {
+			if ( $copy ) {
+				$item = str_replace( '<a ', '<a tabindex="-1" ', $item );
+			}
+
+			$out .= '<li class="lu3g-sc__item">' . $item . '</li>';
+		}
+
+		return $out . '</ul>';
+	}
+
+	/**
+	 * Una riga del marquee: la lista e la sua copia una dopo l'altra. L'animazione sposta la
+	 * traccia di metà della sua larghezza (cioè di una lista), poi riparte: il giro non ha stacchi.
+	 *
+	 * @param array $items   Markup dei loghi.
+	 * @param bool  $reverse Verso destra invece che verso sinistra.
+	 * @return string
+	 */
+	private function lu3g_sc_marquee_row( array $items, $reverse ) {
+		return '<div class="lu3g-sc__row' . ( $reverse ? ' lu3g-sc__row--reverse' : '' ) . '">'
+			. '<div class="lu3g-sc__track">'
+			. $this->lu3g_sc_list( $items )
+			. $this->lu3g_sc_list( $items, true )
+			. '</div></div>';
 	}
 
 	/**
@@ -440,6 +588,12 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 
 		$name = isset( $logo['name'] ) ? trim( wp_strip_all_tags( (string) $logo['name'] ) ) : '';
 		$img  = $this->lu3g_sc_image_markup( $media, $name, $settings );
+
+		// Nel marquee i loghi fuori dal bordo entrano in vista scorrendo: con loading="lazy" si
+		// caricherebbero solo in quel momento e comparirebbero di colpo. Lì si caricano subito.
+		if ( in_array( $settings['style'], array( 'marquee', 'doppia_riga' ), true ) ) {
+			$img = str_replace( 'loading="lazy"', 'loading="eager"', $img );
+		}
 
 		if ( '' === $img ) {
 			return '';
