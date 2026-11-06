@@ -85,9 +85,16 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	public function get_style_depends() {
 		$depends = array( 'lu3g-sc-sponsor-carousel' );
 
-		// CSS di Swiper registrato da Elementor ("swiper", e dalla 3.24 "e-swiper"), solo per lo slider.
-		// Un handle che non esiste viene ignorato.
-		if ( 'slider' === $this->get_settings( 'style' ) || \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+		// CSS di Swiper registrato da Elementor ("swiper", e dalla 3.24 "e-swiper"), solo per lo slider
+		// e nell'editor. Un handle che non esiste viene ignorato.
+		//
+		// Niente get_settings() qui: Elementor chiama questo metodo anche sul widget "modello", senza
+		// dati (per esempio nell'anteprima dell'editor), e get_settings() lì va in errore fatale.
+		// Si legge lo stile salvato direttamente dai dati, se ci sono; non salvato = predefinito (marquee).
+		$data  = $this->get_data();
+		$style = is_array( $data ) && isset( $data['settings']['style'] ) ? $data['settings']['style'] : '';
+
+		if ( 'slider' === $style || \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 			$depends[] = 'swiper';
 			$depends[] = 'e-swiper';
 		}

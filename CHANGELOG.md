@@ -1,5 +1,8 @@
 # Registro delle modifiche
 
+## 0.5.1
+- Corretto: con la 0.4.0 e la 0.5.0 l'anteprima dell'editor di Elementor andava in errore critico e l'editor restava in caricamento. Il widget leggeva le impostazioni anche quando Elementor lo prepara senza dati; ora le legge solo se ci sono.
+
 ## 0.5.0
 - Step 5: stile *Logo wall*. Slot visibili per dispositivo e colonne (vuoto = tutti gli slot su una riga); a ogni intervallo un logo a caso svanisce e al suo posto entra uno che non si vede, mai due uguali a schermo e mai lo stesso slot due volte di fila.
 - Intervallo di sostituzione e durata della dissolvenza; pausa al passaggio del mouse e col focus da tastiera; niente sostituzioni a scheda nascosta.
