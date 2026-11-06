@@ -1,5 +1,8 @@
 # Registro delle modifiche
 
+## 0.5.2
+- Corretto davvero l'errore critico nell'anteprima dell'editor (la 0.5.1 non bastava): sul widget "modello" senza dati anche get_data() va in errore. Ora nell'editor il CSS di Swiper si carica senza leggere le impostazioni, e fuori dall'editor lo stile si legge solo sui widget veri (is_type_instance).
+
 ## 0.5.1
 - Corretto: con la 0.4.0 e la 0.5.0 l'anteprima dell'editor di Elementor andava in errore critico e l'editor restava in caricamento. Il widget leggeva le impostazioni anche quando Elementor lo prepara senza dati; ora le legge solo se ci sono.
 
