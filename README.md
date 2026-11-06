@@ -10,7 +10,7 @@ Plugin WordPress di LU3G Agenzia Web. Requisiti: PHP 7.4+, WordPress 6.0+, Eleme
 Il plugin si costruisce a step, ognuno pubblicato come release da provare:
 
 1. ✅ Bootstrap, controllo di Elementor, categoria "LU3G", widget vuoto (0.1.0)
-2. Repeater dei loghi e stile griglia
+2. ✅ Repeater dei loghi e stile griglia (0.2.0)
 3. Marquee e doppia riga, con sfumatura ai bordi
 4. Slider con lo Swiper di Elementor
 5. Logo wall
