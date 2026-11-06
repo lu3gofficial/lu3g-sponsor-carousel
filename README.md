@@ -14,7 +14,7 @@ Il plugin si costruisce a step, ognuno pubblicato come release da provare:
 3. ✅ Marquee e doppia riga, con sfumatura ai bordi (0.3.0)
 4. ✅ Slider con lo Swiper di Elementor (0.4.0)
 5. ✅ Logo wall (0.5.0)
-6. Tab Stile completo, effetti hover, tooltip
+6. ✅ Tab Stile completo, effetti hover, tooltip (0.6.0)
 7. Rifinitura: movimento ridotto, accessibilità, test nell'editor e nel footer del Theme Builder
 
 ## Installazione su un sito

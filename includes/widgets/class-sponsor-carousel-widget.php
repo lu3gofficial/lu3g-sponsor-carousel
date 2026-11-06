@@ -17,7 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Border;
+use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Image_Size;
+use Elementor\Group_Control_Typography;
 use Elementor\Repeater;
 use Elementor\Utils;
 use Elementor\Widget_Base;
@@ -134,6 +137,10 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 		$this->lu3g_sc_register_logos_controls();
 		$this->lu3g_sc_register_layout_controls();
 		$this->lu3g_sc_register_logo_style_controls();
+		$this->lu3g_sc_register_effect_controls();
+		$this->lu3g_sc_register_box_controls();
+		$this->lu3g_sc_register_nav_controls();
+		$this->lu3g_sc_register_tooltip_controls();
 	}
 
 	/**
@@ -600,6 +607,427 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	}
 
 	/**
+	 * Stile → Effetto: normale e al passaggio del mouse (anche col focus da tastiera).
+	 */
+	private function lu3g_sc_register_effect_controls() {
+		$this->start_controls_section(
+			'section_effect_style',
+			array(
+				'label' => esc_html__( 'Effetto', 'lu3g-sponsor-carousel' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->start_controls_tabs( 'effect_tabs' );
+
+		foreach ( array( 'normal' => '', 'hover' => '-h' ) as $state => $suffix ) {
+			$this->start_controls_tab(
+				'effect_tab_' . $state,
+				array( 'label' => 'normal' === $state ? esc_html__( 'Normale', 'lu3g-sponsor-carousel' ) : esc_html__( 'Hover', 'lu3g-sponsor-carousel' ) )
+			);
+
+			$this->add_control(
+				'effect_gray_' . $state,
+				array(
+					'label'      => esc_html__( 'Scala di grigi', 'lu3g-sponsor-carousel' ),
+					'type'       => Controls_Manager::SLIDER,
+					'size_units' => array( '%' ),
+					'range'      => array( '%' => array( 'min' => 0, 'max' => 100 ) ),
+					'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-gray' . $suffix . ': {{SIZE}}%;' ),
+				)
+			);
+
+			$this->add_control(
+				'effect_opacity_' . $state,
+				array(
+					'label'     => esc_html__( 'Opacità', 'lu3g-sponsor-carousel' ),
+					'type'      => Controls_Manager::SLIDER,
+					'range'     => array( 'px' => array( 'min' => 0, 'max' => 1, 'step' => 0.05 ) ),
+					'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-opacity' . $suffix . ': {{SIZE}};' ),
+				)
+			);
+
+			$this->add_control(
+				'effect_scale_' . $state,
+				array(
+					'label'     => esc_html__( 'Scala', 'lu3g-sponsor-carousel' ),
+					'type'      => Controls_Manager::SLIDER,
+					'range'     => array( 'px' => array( 'min' => 0.5, 'max' => 1.5, 'step' => 0.01 ) ),
+					'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-scale' . $suffix . ': {{SIZE}};' ),
+				)
+			);
+
+			$this->end_controls_tab();
+		}
+
+		$this->end_controls_tabs();
+
+		$this->add_control(
+			'effect_duration',
+			array(
+				'label'      => esc_html__( 'Durata della transizione (ms)', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'ms' ),
+				'range'      => array( 'ms' => array( 'min' => 0, 'max' => 2000, 'step' => 50 ) ),
+				'separator'  => 'before',
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-transition: {{SIZE}}ms;' ),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Stile → Box del logo.
+	 */
+	private function lu3g_sc_register_box_controls() {
+		$box = '{{WRAPPER}} .lu3g-sc__logo';
+
+		$this->start_controls_section(
+			'section_box_style',
+			array(
+				'label' => esc_html__( 'Box del logo', 'lu3g-sponsor-carousel' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_responsive_control(
+			'box_padding',
+			array(
+				'label'      => esc_html__( 'Spaziatura interna', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em', '%' ),
+				'selectors'  => array( $box => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'box_radius',
+			array(
+				'label'      => esc_html__( 'Arrotondamento', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array( $box => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;' ),
+			)
+		);
+
+		$this->start_controls_tabs( 'box_tabs' );
+
+		$this->start_controls_tab( 'box_tab_normal', array( 'label' => esc_html__( 'Normale', 'lu3g-sponsor-carousel' ) ) );
+
+		$this->add_control(
+			'box_bg',
+			array(
+				'label'     => esc_html__( 'Sfondo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $box => 'background-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			array(
+				'name'     => 'box_border',
+				'selector' => $box,
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			array(
+				'name'     => 'box_shadow',
+				'selector' => $box,
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'box_tab_hover', array( 'label' => esc_html__( 'Hover', 'lu3g-sponsor-carousel' ) ) );
+
+		$this->add_control(
+			'box_bg_hover',
+			array(
+				'label'     => esc_html__( 'Sfondo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $box . ':hover, ' . $box . ':focus-visible' => 'background-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'box_border_color_hover',
+			array(
+				'label'     => esc_html__( 'Colore del bordo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $box . ':hover, ' . $box . ':focus-visible' => 'border-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Box_Shadow::get_type(),
+			array(
+				'name'     => 'box_shadow_hover',
+				'selector' => $box . ':hover, ' . $box . ':focus-visible',
+			)
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Stile → Frecce e pallini dello slider.
+	 */
+	private function lu3g_sc_register_nav_controls() {
+		$arrow = '{{WRAPPER}} .lu3g-sc .lu3g-sc__arrow';
+
+		$this->start_controls_section(
+			'section_nav_style',
+			array(
+				'label'     => esc_html__( 'Frecce e pallini', 'lu3g-sponsor-carousel' ),
+				'tab'       => Controls_Manager::TAB_STYLE,
+				'condition' => array( 'style' => 'slider' ),
+			)
+		);
+
+		$this->add_control(
+			'arrows_heading',
+			array(
+				'label' => esc_html__( 'Frecce', 'lu3g-sponsor-carousel' ),
+				'type'  => Controls_Manager::HEADING,
+			)
+		);
+
+		$this->add_control(
+			'arrows_position',
+			array(
+				'label'        => esc_html__( 'Posizione', 'lu3g-sponsor-carousel' ),
+				'type'         => Controls_Manager::SELECT,
+				'default'      => 'outside',
+				'options'      => array(
+					'outside' => esc_html__( 'Ai lati, fuori dai loghi', 'lu3g-sponsor-carousel' ),
+					'inside'  => esc_html__( 'Ai lati, sopra i loghi', 'lu3g-sponsor-carousel' ),
+					'bottom'  => esc_html__( 'Sotto, al centro', 'lu3g-sponsor-carousel' ),
+				),
+				'prefix_class' => 'lu3g-sc-arrows-',
+			)
+		);
+
+		$this->add_responsive_control(
+			'arrows_size',
+			array(
+				'label'      => esc_html__( 'Dimensione', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 16, 'max' => 96 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-arrow-size: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->start_controls_tabs( 'arrows_tabs' );
+
+		$this->start_controls_tab( 'arrows_tab_normal', array( 'label' => esc_html__( 'Normale', 'lu3g-sponsor-carousel' ) ) );
+
+		$this->add_control(
+			'arrows_color',
+			array(
+				'label'     => esc_html__( 'Colore', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $arrow => 'color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'arrows_bg',
+			array(
+				'label'     => esc_html__( 'Sfondo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $arrow => 'background-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'arrows_tab_hover', array( 'label' => esc_html__( 'Hover', 'lu3g-sponsor-carousel' ) ) );
+
+		$this->add_control(
+			'arrows_color_hover',
+			array(
+				'label'     => esc_html__( 'Colore', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $arrow . ':hover, ' . $arrow . ':focus-visible' => 'color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'arrows_bg_hover',
+			array(
+				'label'     => esc_html__( 'Sfondo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $arrow . ':hover, ' . $arrow . ':focus-visible' => 'background-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->end_controls_tab();
+		$this->end_controls_tabs();
+
+		$this->add_control(
+			'dots_heading',
+			array(
+				'label'     => esc_html__( 'Pallini', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_responsive_control(
+			'dots_size',
+			array(
+				'label'      => esc_html__( 'Dimensione', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 4, 'max' => 30 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-dot-size: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_control(
+			'dots_color',
+			array(
+				'label'     => esc_html__( 'Colore', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-dot-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'dots_color_active',
+			array(
+				'label'     => esc_html__( 'Colore del pallino attivo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-dot-active: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'dots_align',
+			array(
+				'label'     => esc_html__( 'Allineamento', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => array(
+					'flex-start' => array(
+						'title' => esc_html__( 'Sinistra', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-text-align-left',
+					),
+					'center'     => array(
+						'title' => esc_html__( 'Centro', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-text-align-center',
+					),
+					'flex-end'   => array(
+						'title' => esc_html__( 'Destra', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-text-align-right',
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-dots-align: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'dots_spacing',
+			array(
+				'label'      => esc_html__( 'Distanza dai loghi', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 80 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-dots-space: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Stile → Tooltip col nome dello sponsor.
+	 */
+	private function lu3g_sc_register_tooltip_controls() {
+		$tip = '{{WRAPPER}} .lu3g-sc__tip';
+
+		$this->start_controls_section(
+			'section_tooltip_style',
+			array(
+				'label' => esc_html__( 'Tooltip', 'lu3g-sponsor-carousel' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_control(
+			'tooltip',
+			array(
+				'label'        => esc_html__( 'Mostra il nome', 'lu3g-sponsor-carousel' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'description'  => esc_html__( 'Il nome dello sponsor compare sopra il logo al passaggio del mouse e col focus da tastiera.', 'lu3g-sponsor-carousel' ),
+			)
+		);
+
+		$this->add_control(
+			'tooltip_color',
+			array(
+				'label'     => esc_html__( 'Colore del testo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( $tip => 'color: {{VALUE}};' ),
+				'condition' => array( 'tooltip' => 'yes' ),
+			)
+		);
+
+		$this->add_control(
+			'tooltip_bg',
+			array(
+				'label'     => esc_html__( 'Sfondo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-tip-bg: {{VALUE}};' ),
+				'condition' => array( 'tooltip' => 'yes' ),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'      => 'tooltip_typography',
+				'selector'  => $tip,
+				'condition' => array( 'tooltip' => 'yes' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'tooltip_padding',
+			array(
+				'label'      => esc_html__( 'Spaziatura interna', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em' ),
+				'selectors'  => array( $tip => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ),
+				'condition'  => array( 'tooltip' => 'yes' ),
+			)
+		);
+
+		$this->add_control(
+			'tooltip_radius',
+			array(
+				'label'      => esc_html__( 'Arrotondamento', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 30 ) ),
+				'selectors'  => array( $tip => 'border-radius: {{SIZE}}{{UNIT}};' ),
+				'condition'  => array( 'tooltip' => 'yes' ),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	/**
 	 * Markup.
 	 */
 	protected function render() {
@@ -628,6 +1056,10 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 		}
 
 		$classes = array( 'lu3g-sc', 'lu3g-sc--' . $layout );
+
+		if ( 'yes' === $settings['tooltip'] ) {
+			$classes[] = 'lu3g-sc--tooltip';
+		}
 
 		if ( in_array( $layout, array( 'marquee', 'doppia_riga' ), true ) ) {
 			$classes[] = 'lu3g-sc--moving';
@@ -675,6 +1107,11 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			} else {
 				echo $this->lu3g_sc_marquee_row( $items, $reverse ); // phpcs:ignore WordPress.Security.EscapeOutput
 			}
+		}
+
+		// Tooltip: un solo elemento, fuori dalle righe che scorrono (che tagliano ciò che esce).
+		if ( 'yes' === $settings['tooltip'] ) {
+			echo '<span class="lu3g-sc__tip" aria-hidden="true"></span>';
 		}
 
 		echo '</div>';
@@ -815,8 +1252,11 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			return '';
 		}
 
+		// Nome per il tooltip (lo mostra il JS sopra il logo).
+		$tip = ( 'yes' === $settings['tooltip'] && '' !== $name ) ? $name : '';
+
 		if ( empty( $logo['link']['url'] ) ) {
-			return '<span class="lu3g-sc__logo">' . $img . '</span>';
+			return '<span class="lu3g-sc__logo"' . ( '' !== $tip ? ' data-lu3g-sc-tip="' . esc_attr( $tip ) . '"' : '' ) . '>' . $img . '</span>';
 		}
 
 		$key = 'link_' . $index;
@@ -834,6 +1274,10 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 
 		if ( '' !== $name ) {
 			$this->add_render_attribute( $key, 'aria-label', $name );
+		}
+
+		if ( '' !== $tip ) {
+			$this->add_render_attribute( $key, 'data-lu3g-sc-tip', $tip );
 		}
 
 		return '<a ' . $this->get_render_attribute_string( $key ) . '>' . $img . '</a>';

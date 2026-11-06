@@ -12,12 +12,20 @@
  *   --lu3g-sc-fade         larghezza della sfumatura ai bordi
  *   --lu3g-sc-wall-slots   slot del logo wall, --lu3g-sc-wall-columns sue colonne
  *   --lu3g-sc-swap         durata della dissolvenza del logo wall
+ *   --lu3g-sc-gray, --lu3g-sc-opacity, --lu3g-sc-scale (e -h per l'hover), --lu3g-sc-transition  effetto
+ *   --lu3g-sc-arrow-size, --lu3g-sc-dot-size, --lu3g-sc-dot-color, --lu3g-sc-dot-active,
+ *   --lu3g-sc-dots-align, --lu3g-sc-dots-space  frecce e pallini · --lu3g-sc-tip-bg  tooltip
  * e dal JS:
  *   --lu3g-sc-repeat       quante volte i loghi sono ripetuti per riempire la riga
  */
 
 /* I predefiniti stanno nei var(--x, predefinito): una variabile dichiarata qui coprirebbe
    quella impostata da Elementor sul contenitore esterno. */
+
+/* Il tooltip si posiziona rispetto al widget */
+.lu3g-sc {
+	position: relative;
+}
 
 /* Lista senza gli stili del tema */
 .lu3g-sc .lu3g-sc__list {
@@ -60,6 +68,33 @@
 /* SVG senza misure nel file: senza proporzioni note, occupa la larghezza disponibile. */
 .lu3g-sc .lu3g-sc__img:not([width]) {
 	width: 100%;
+}
+
+/* Effetto: normale e al passaggio del mouse / focus da tastiera (l'hover eredita il normale se non è impostato) */
+.lu3g-sc .lu3g-sc__img {
+	filter: grayscale(var(--lu3g-sc-gray, 0%));
+	opacity: var(--lu3g-sc-opacity, 1);
+	transform: scale(var(--lu3g-sc-scale, 1));
+	transition:
+		filter var(--lu3g-sc-transition, 300ms) ease,
+		opacity var(--lu3g-sc-transition, 300ms) ease,
+		transform var(--lu3g-sc-transition, 300ms) ease;
+}
+
+.lu3g-sc .lu3g-sc__logo:hover .lu3g-sc__img,
+.lu3g-sc .lu3g-sc__logo:focus-visible .lu3g-sc__img {
+	filter: grayscale(var(--lu3g-sc-gray-h, var(--lu3g-sc-gray, 0%)));
+	opacity: var(--lu3g-sc-opacity-h, var(--lu3g-sc-opacity, 1));
+	transform: scale(var(--lu3g-sc-scale-h, var(--lu3g-sc-scale, 1)));
+}
+
+/* Box del logo: i colori dell'hover sfumano */
+.lu3g-sc__logo {
+	box-sizing: border-box;
+	transition:
+		background-color var(--lu3g-sc-transition, 300ms) ease,
+		border-color var(--lu3g-sc-transition, 300ms) ease,
+		box-shadow var(--lu3g-sc-transition, 300ms) ease;
 }
 
 .lu3g-sc__logo:focus-visible {
@@ -204,6 +239,12 @@
 		padding-inline-end: 0;
 	}
 
+	.lu3g-sc .lu3g-sc__img,
+	.lu3g-sc__logo,
+	.lu3g-sc__tip {
+		transition: none;
+	}
+
 	.lu3g-sc--logo_wall .lu3g-sc__item.is-pooled {
 		display: flex;
 	}
@@ -292,9 +333,9 @@
 .lu3g-sc .lu3g-sc__dots {
 	position: static;
 	display: flex;
-	justify-content: center;
+	justify-content: var(--lu3g-sc-dots-align, center);
 	gap: 8px;
-	margin-top: 16px;
+	margin-top: var(--lu3g-sc-dots-space, 16px);
 }
 
 .lu3g-sc .lu3g-sc__dots .swiper-pagination-bullet {
@@ -306,6 +347,79 @@
 }
 
 .lu3g-sc .lu3g-sc__dots .swiper-pagination-bullet-active {
+	background: var(--lu3g-sc-dot-active, var(--lu3g-sc-dot-color, currentColor));
+	opacity: 1;
+}
+
+/* Frecce: posizioni (classe lu3g-sc-arrows-* sul contenitore di Elementor) */
+.lu3g-sc .lu3g-sc__arrow {
+	transition: color var(--lu3g-sc-transition, 300ms) ease, background-color var(--lu3g-sc-transition, 300ms) ease;
+}
+
+.lu3g-sc-arrows-inside .lu3g-sc--slider .lu3g-sc__swiper,
+.lu3g-sc-arrows-bottom .lu3g-sc--slider .lu3g-sc__swiper {
+	margin-inline: 0;
+}
+
+.lu3g-sc-arrows-inside .lu3g-sc .lu3g-sc__arrow--prev {
+	left: 8px;
+}
+
+.lu3g-sc-arrows-inside .lu3g-sc .lu3g-sc__arrow--next {
+	right: 8px;
+}
+
+/* Sotto, al centro: spazio in fondo al widget per le frecce */
+.lu3g-sc-arrows-bottom .lu3g-sc--slider:has(.lu3g-sc__arrow) {
+	padding-bottom: calc(var(--lu3g-sc-arrow-size, 36px) + 16px);
+}
+
+.lu3g-sc-arrows-bottom .lu3g-sc .lu3g-sc__arrow {
+	top: auto;
+	bottom: 0;
+	transform: none;
+}
+
+.lu3g-sc-arrows-bottom .lu3g-sc .lu3g-sc__arrow--prev {
+	left: calc(50% - var(--lu3g-sc-arrow-size, 36px) - 6px);
+}
+
+.lu3g-sc-arrows-bottom .lu3g-sc .lu3g-sc__arrow--next {
+	right: calc(50% - var(--lu3g-sc-arrow-size, 36px) - 6px);
+}
+
+/* ---------- Tooltip ---------- */
+
+/* Posizione impostata dal JS sopra il logo (left = centro del logo, top = suo bordo superiore) */
+.lu3g-sc__tip {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 5;
+	padding: 6px 10px;
+	border-radius: 4px;
+	background: var(--lu3g-sc-tip-bg, #1d2327);
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.3;
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transform: translate(-50%, calc(-100% - 8px));
+	transition: opacity 0.15s ease;
+}
+
+.lu3g-sc__tip::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border: 5px solid transparent;
+	border-top-color: var(--lu3g-sc-tip-bg, #1d2327);
+}
+
+.lu3g-sc__tip.is-visible {
 	opacity: 1;
 }
 

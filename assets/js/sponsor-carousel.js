@@ -204,6 +204,62 @@
 		window.setTimeout( finish, 4000 );
 	}
 
+	/**
+	 * Tooltip col nome dello sponsor: un solo elemento (.lu3g-sc__tip) nel widget, fuori dalle righe
+	 * che scorrono, posizionato sopra il logo al passaggio del mouse e col focus da tastiera.
+	 *
+	 * @param {HTMLElement} root Contenitore del widget.
+	 */
+	function setupTooltip( root ) {
+		var tip = root.querySelector( '.lu3g-sc__tip' );
+
+		if ( ! tip ) {
+			return;
+		}
+
+		var current = null;
+
+		var show = function ( logo ) {
+			var box = root.getBoundingClientRect();
+			var rect = logo.getBoundingClientRect();
+
+			current = logo;
+			tip.textContent = logo.getAttribute( 'data-lu3g-sc-tip' );
+			tip.style.left = ( rect.left - box.left + rect.width / 2 ) + 'px';
+			tip.style.top = ( rect.top - box.top ) + 'px';
+			tip.classList.add( 'is-visible' );
+		};
+
+		var hide = function () {
+			current = null;
+			tip.classList.remove( 'is-visible' );
+		};
+
+		root.addEventListener( 'mouseover', function ( e ) {
+			var logo = e.target.closest( '[data-lu3g-sc-tip]' );
+
+			if ( logo && logo !== current ) {
+				show( logo );
+			}
+		} );
+
+		root.addEventListener( 'mouseout', function ( e ) {
+			if ( current && ! current.contains( e.relatedTarget ) ) {
+				hide();
+			}
+		} );
+
+		root.addEventListener( 'focusin', function ( e ) {
+			var logo = e.target.closest( '[data-lu3g-sc-tip]' );
+
+			if ( logo ) {
+				show( logo );
+			}
+		} );
+
+		root.addEventListener( 'focusout', hide );
+	}
+
 	function register() {
 		var Base = window.elementorModules && window.elementorModules.frontend.handlers.Base;
 
@@ -219,6 +275,12 @@
 				Base.prototype.onInit.apply( this, arguments );
 
 				this.timers = [];
+
+				var widget = this.$element[ 0 ].querySelector( '.lu3g-sc' );
+
+				if ( widget ) {
+					setupTooltip( widget );
+				}
 
 				var slider = this.$element[ 0 ].querySelector( '.lu3g-sc--slider' );
 

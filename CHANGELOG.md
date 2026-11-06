@@ -1,5 +1,12 @@
 # Registro delle modifiche
 
+## 0.6.0
+- Step 6: tab Stile completa.
+- *Effetto*, normale e hover (vale anche col focus da tastiera): scala di grigi, opacità, scala, durata della transizione. L'hover eredita il normale se non è impostato.
+- *Box del logo*: spaziatura interna, arrotondamento, sfondo, bordo e ombra, con sfondo, colore del bordo e ombra in hover.
+- *Frecce e pallini* (slider): posizione delle frecce (ai lati fuori, ai lati sopra i loghi, sotto al centro), dimensione, colori e sfondi normale/hover; pallini con dimensione, colore, colore dell'attivo, allineamento e distanza.
+- *Tooltip*: il nome dello sponsor sopra il logo al passaggio del mouse e col focus; colori, tipografia, spaziatura e arrotondamento. È un solo elemento fuori dalle righe che scorrono, così marquee e slider non lo tagliano.
+
 ## 0.5.2
 - Corretto davvero l'errore critico nell'anteprima dell'editor (la 0.5.1 non bastava): sul widget "modello" senza dati anche get_data() va in errore. Ora nell'editor il CSS di Swiper si carica senza leggere le impostazioni, e fuori dall'editor lo stile si legge solo sui widget veri (is_type_instance).
 
