@@ -1,5 +1,8 @@
 # Registro delle modifiche
 
+## 1.1.1
+- `includes/class-updater.php` ora è generato dal modello comune di [lu3g-updater](https://github.com/lu3gofficial/lu3g-updater) (1.0.0), a partire dal nuovo file `.lu3g-updater`. Il codice dell'updater è lo stesso di prima: cambia solo il commento in cima. Nessun cambiamento nel widget.
+
 ## 1.1.0
 - *Layout → Blocca lo scorrimento*, per desktop, tablet e mobile (vuoto = come il dispositivo più grande). Con "Sì, loghi fermi": marquee e doppia riga diventano righe di loghi centrate che vanno a capo, senza copie né sfumatura; il logo wall non sostituisce più i loghi; lo slider non scorre da solo (frecce e pallini restano); il pulsante pausa sparisce. Funziona con il solo CSS (media query di Elementor), quindi vale da subito e si vede nell'editor cambiando dispositivo.
 
