@@ -28,7 +28,7 @@ Il plugin si costruisce a step, ognuno pubblicato come release da provare:
 - `lu3g-sponsor-carousel.php` – intestazione, controllo di Elementor con avviso in bacheca, avvio, aggiornamenti.
 - `includes/class-plugin.php` – categoria "LU3G", registrazione del widget e degli asset.
 - `includes/widgets/class-sponsor-carousel-widget.php` – il widget.
-- `includes/class-updater.php` – aggiornamenti dalle release GitHub.
+- `includes/class-updater.php` – aggiornamenti dalle release GitHub. **Generato** da [lu3g-updater](https://github.com/lu3gofficial/lu3g-updater) con i dati di `.lu3g-updater`: non modificarlo a mano, rigeneralo con `sh ../lu3g-updater/bin/sync.sh .`.
 - `assets/css/sponsor-carousel.css`, `assets/js/sponsor-carousel.js` – stile e handler frontend di Elementor.
 - `languages/` – traduzioni.
 
