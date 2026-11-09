@@ -38,5 +38,7 @@ Prefissi: `lu3g-sc` per classi CSS e handle, `LU3G_SC_` per classi PHP e costant
 1. Aumenta la versione in `lu3g-sponsor-carousel.php` (`Version:` e `LU3G_SC_VERSION`).
 2. Aggiungi la sezione della versione in `CHANGELOG.md` (diventa la nota della release).
 3. Commit, poi `git tag vX.Y.Z && git push && git push --tags`: l'automazione crea lo zip e pubblica la release.
+   Senza computer: dopo il merge su `main`, su GitHub *Actions → Release → Run workflow* (branch `main`). Il tag lo crea
+   l'automazione dalla `Version` del plugin; se quella versione è già pubblicata si ferma.
 
 Pacchetto in locale: `sh bin/build.sh` → `dist/lu3g-sponsor-carousel.zip`.
