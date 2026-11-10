@@ -304,6 +304,57 @@
 		} );
 	}
 
+	/**
+	 * Titolo (1.3.0): l'animazione parte quando il titolo entra nello schermo, una volta sola.
+	 * .is-armed mette lo stato iniziale (linee chiuse, testo nascosto), .is-in fa partire l'animazione.
+	 * Senza IntersectionObserver o con "riduci animazioni" non si arma niente: il titolo resta visibile.
+	 * "Lettere una alla volta": il testo viene diviso in lettere (nascoste agli screen reader, che leggono
+	 * il testo intero dall'aria-label) con un ritardo crescente --d.
+	 *
+	 * @return {IntersectionObserver|null} da chiudere in onDestroy.
+	 */
+	function setupTitle( scope ) {
+		var title = scope.querySelector( '.lu3g-sc-title' );
+		var anim = title ? title.getAttribute( 'data-lu3g-sc-title' ) : 'none';
+		var reduced = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+
+		if ( ! title || 'none' === anim || reduced || ! ( 'IntersectionObserver' in window ) ) {
+			return null;
+		}
+
+		if ( 'letters' === anim ) {
+			var text = title.querySelector( '.lu3g-sc-title__text' );
+			if ( text && ! text.querySelector( '.lu3g-sc-title__char' ) ) {
+				var words = text.textContent;
+				var step = 35;
+				text.setAttribute( 'aria-label', words );
+				text.textContent = '';
+				Array.prototype.forEach.call( words, function ( ch, n ) {
+					var span = document.createElement( 'span' );
+					span.className = 'lu3g-sc-title__char';
+					span.setAttribute( 'aria-hidden', 'true' );
+					span.style.setProperty( '--d', ( n * step ) + 'ms' );
+					span.textContent = ch;
+					text.appendChild( span );
+				} );
+			}
+		}
+
+		title.classList.add( 'is-armed' );
+
+		var observer = new window.IntersectionObserver( function ( entries ) {
+			entries.forEach( function ( entry ) {
+				if ( entry.isIntersecting ) {
+					title.classList.add( 'is-in' );
+					observer.disconnect();
+				}
+			} );
+		}, { threshold: 0.3 } );
+
+		observer.observe( title );
+		return observer;
+	}
+
 	function register() {
 		var Base = window.elementorModules && window.elementorModules.frontend.handlers.Base;
 
@@ -319,6 +370,8 @@
 				Base.prototype.onInit.apply( this, arguments );
 
 				this.timers = [];
+
+				this.lu3gTitleObserver = setupTitle( this.$element[ 0 ] );
 
 				var widget = this.$element[ 0 ].querySelector( '.lu3g-sc' );
 
@@ -593,6 +646,10 @@
 			 */
 			onDestroy: function () {
 				this.lu3gDestroyed = true;
+
+				if ( this.lu3gTitleObserver ) {
+					this.lu3gTitleObserver.disconnect();
+				}
 
 				( this.timers || [] ).forEach( function ( id ) {
 					window.clearInterval( id );

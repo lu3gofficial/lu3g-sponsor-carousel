@@ -400,3 +400,75 @@ msgstr ""
 
 msgid "Tutti i loghi prendono questa larghezza e l'altezza segue le proporzioni del file (l'altezza massima non conta più). Vuota: i loghi hanno l'altezza massima e la larghezza dalle proporzioni."
 msgstr ""
+
+msgid "Titolo"
+msgstr ""
+
+msgid "Mostra il titolo"
+msgstr ""
+
+msgid "Testo"
+msgstr ""
+
+msgid "Tag HTML"
+msgstr ""
+
+msgid "Animazione"
+msgstr ""
+
+msgid "Linee dal centro, testo che sale"
+msgstr ""
+
+msgid "Testo che si stringe"
+msgstr ""
+
+msgid "Linee che corrono, testo che si scopre"
+msgstr ""
+
+msgid "Lettere una alla volta"
+msgstr ""
+
+msgid "Nessuna"
+msgstr ""
+
+msgid "Parte una volta, quando il titolo entra nello schermo. Con \"riduci animazioni\" il titolo compare fermo."
+msgstr ""
+
+msgid "Linee"
+msgstr ""
+
+msgid "Sopra e sotto"
+msgstr ""
+
+msgid "Solo sopra"
+msgstr ""
+
+msgid "Solo sotto"
+msgstr ""
+
+msgid "Larghezza delle linee"
+msgstr ""
+
+msgid "Tutta la riga"
+msgstr ""
+
+msgid "Quanto il testo"
+msgstr ""
+
+msgid "Colore delle linee"
+msgstr ""
+
+msgid "Spessore delle linee"
+msgstr ""
+
+msgid "Distanza tra linee e testo"
+msgstr ""
+
+msgid "Spazio sotto il titolo"
+msgstr ""
+
+msgid "Durata dell'animazione (ms)"
+msgstr ""
+
+msgid "I nostri partner"
+msgstr ""

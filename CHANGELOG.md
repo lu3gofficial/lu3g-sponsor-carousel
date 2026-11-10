@@ -1,5 +1,11 @@
 # Registro delle modifiche
 
+## 1.3.0
+- Nuova sezione *Contenuto → Titolo*: titolo sopra i loghi (di serie "I nostri partner"), tag H2–H6/p/div, linee sopra e sotto (o solo una, o nessuna), larghezza delle linee (tutta la riga o quanto il testo). **Spento di serie**: i widget già pubblicati non cambiano finché non lo si accende.
+- Quattro animazioni d'ingresso, scelte in *Animazione*: linee dal centro con testo che sale (di serie), testo che si stringe, linee che corrono con testo che si scopre, lettere una alla volta; oppure nessuna. Partono una volta, quando il titolo entra nello schermo; con "riduci animazioni" il titolo compare fermo. Con le lettere una alla volta gli screen reader leggono comunque la frase intera.
+- *Stile → Titolo*: allineamento per dispositivo, colore e tipografia del testo (di serie maiuscolo e grassetto), colore (di serie lilla) e spessore delle linee, distanza tra linee e testo, spazio sotto il titolo, durata dell'animazione.
+- Il titolo sta fuori dal contenitore dei loghi, così non sposta frecce, pallini e tooltip dello slider.
+
 ## 1.2.0
 - *Stile → Loghi → Larghezza dei loghi*, per desktop, tablet e mobile (px o vw): tutti i loghi prendono la stessa larghezza e l'altezza segue le proporzioni del file. Utile quando i file hanno tutti le stesse proporzioni. Vale in tutti gli stili, anche per gli SVG senza misure. Vuota, i loghi restano come prima (altezza massima, larghezza dalle proporzioni).
 

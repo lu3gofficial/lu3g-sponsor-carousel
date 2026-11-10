@@ -136,11 +136,267 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 	protected function register_controls() {
 		$this->lu3g_sc_register_logos_controls();
 		$this->lu3g_sc_register_layout_controls();
+		$this->lu3g_sc_register_title_controls();
+		$this->lu3g_sc_register_title_style_controls();
 		$this->lu3g_sc_register_logo_style_controls();
 		$this->lu3g_sc_register_effect_controls();
 		$this->lu3g_sc_register_box_controls();
 		$this->lu3g_sc_register_nav_controls();
 		$this->lu3g_sc_register_tooltip_controls();
+	}
+
+	/**
+	 * Contenuto → Titolo (1.3.0): titolo sopra i loghi con due linee e un'animazione d'ingresso.
+	 * Spento di serie: i widget già pubblicati non cambiano finché non lo si accende.
+	 */
+	private function lu3g_sc_register_title_controls() {
+		$this->start_controls_section(
+			'section_title',
+			array(
+				'label' => esc_html__( 'Titolo', 'lu3g-sponsor-carousel' ),
+			)
+		);
+
+		$this->add_control(
+			'title_show',
+			array(
+				'label'        => esc_html__( 'Mostra il titolo', 'lu3g-sponsor-carousel' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'return_value' => 'yes',
+			)
+		);
+
+		$on = array( 'title_show' => 'yes' );
+
+		$this->add_control(
+			'title_text',
+			array(
+				'label'       => esc_html__( 'Testo', 'lu3g-sponsor-carousel' ),
+				'type'        => Controls_Manager::TEXT,
+				'default'     => esc_html__( 'I nostri partner', 'lu3g-sponsor-carousel' ),
+				'label_block' => true,
+				'dynamic'     => array( 'active' => true ),
+				'condition'   => $on,
+			)
+		);
+
+		$this->add_control(
+			'title_tag',
+			array(
+				'label'     => esc_html__( 'Tag HTML', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'h2',
+				'options'   => array(
+					'h2'  => 'H2',
+					'h3'  => 'H3',
+					'h4'  => 'H4',
+					'h5'  => 'H5',
+					'h6'  => 'H6',
+					'p'   => 'p',
+					'div' => 'div',
+				),
+				'condition' => $on,
+			)
+		);
+
+		$this->add_control(
+			'title_animation',
+			array(
+				'label'     => esc_html__( 'Animazione', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'lines',
+				'options'   => array(
+					'lines'   => esc_html__( 'Linee dal centro, testo che sale', 'lu3g-sponsor-carousel' ),
+					'tighten' => esc_html__( 'Testo che si stringe', 'lu3g-sponsor-carousel' ),
+					'sweep'   => esc_html__( 'Linee che corrono, testo che si scopre', 'lu3g-sponsor-carousel' ),
+					'letters' => esc_html__( 'Lettere una alla volta', 'lu3g-sponsor-carousel' ),
+					'none'    => esc_html__( 'Nessuna', 'lu3g-sponsor-carousel' ),
+				),
+				'description' => esc_html__( 'Parte una volta, quando il titolo entra nello schermo. Con "riduci animazioni" il titolo compare fermo.', 'lu3g-sponsor-carousel' ),
+				'condition' => $on,
+			)
+		);
+
+		$this->add_control(
+			'title_lines',
+			array(
+				'label'     => esc_html__( 'Linee', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'both',
+				'options'   => array(
+					'both'   => esc_html__( 'Sopra e sotto', 'lu3g-sponsor-carousel' ),
+					'top'    => esc_html__( 'Solo sopra', 'lu3g-sponsor-carousel' ),
+					'bottom' => esc_html__( 'Solo sotto', 'lu3g-sponsor-carousel' ),
+					'none'   => esc_html__( 'Nessuna', 'lu3g-sponsor-carousel' ),
+				),
+				'condition' => $on,
+			)
+		);
+
+		$this->add_control(
+			'title_lines_width',
+			array(
+				'label'     => esc_html__( 'Larghezza delle linee', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'full',
+				'options'   => array(
+					'full' => esc_html__( 'Tutta la riga', 'lu3g-sponsor-carousel' ),
+					'text' => esc_html__( 'Quanto il testo', 'lu3g-sponsor-carousel' ),
+				),
+				'condition' => array(
+					'title_show'   => 'yes',
+					'title_lines!' => 'none',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Stile → Titolo: testo, linee e spazi, tramite variabili CSS --lu3g-sc-title-*.
+	 */
+	private function lu3g_sc_register_title_style_controls() {
+		$this->start_controls_section(
+			'section_title_style',
+			array(
+				'label'     => esc_html__( 'Titolo', 'lu3g-sponsor-carousel' ),
+				'tab'       => Controls_Manager::TAB_STYLE,
+				'condition' => array( 'title_show' => 'yes' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'title_align',
+			array(
+				'label'     => esc_html__( 'Allineamento', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::CHOOSE,
+				'options'   => array(
+					'left'   => array(
+						'title' => esc_html__( 'Sinistra', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-text-align-left',
+					),
+					'center' => array(
+						'title' => esc_html__( 'Centro', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-text-align-center',
+					),
+					'right'  => array(
+						'title' => esc_html__( 'Destra', 'lu3g-sponsor-carousel' ),
+						'icon'  => 'eicon-text-align-right',
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-title-align: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'title_color',
+			array(
+				'label'     => esc_html__( 'Colore del testo', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-title-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'title_typography',
+				'selector' => '{{WRAPPER}} .lu3g-sc-title .lu3g-sc-title__text',
+			)
+		);
+
+		$this->add_control(
+			'title_line_color',
+			array(
+				'label'     => esc_html__( 'Colore delle linee', 'lu3g-sponsor-carousel' ),
+				'type'      => Controls_Manager::COLOR,
+				'separator' => 'before',
+				'selectors' => array( '{{WRAPPER}}' => '--lu3g-sc-title-line: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'title_line_size',
+			array(
+				'label'      => esc_html__( 'Spessore delle linee', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 1, 'max' => 12 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-title-line-size: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'title_line_gap',
+			array(
+				'label'      => esc_html__( 'Distanza tra linee e testo', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 60 ),
+					'em' => array( 'min' => 0, 'max' => 4 ),
+				),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-title-gap: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'title_spacing',
+			array(
+				'label'      => esc_html__( 'Spazio sotto il titolo', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array(
+					'px' => array( 'min' => 0, 'max' => 120 ),
+					'em' => array( 'min' => 0, 'max' => 6 ),
+				),
+				'separator'  => 'before',
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-title-space: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_control(
+			'title_duration',
+			array(
+				'label'      => esc_html__( 'Durata dell\'animazione (ms)', 'lu3g-sponsor-carousel' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'ms' ),
+				'range'      => array( 'ms' => array( 'min' => 300, 'max' => 3000, 'step' => 50 ) ),
+				'condition'  => array( 'title_animation!' => 'none' ),
+				'selectors'  => array( '{{WRAPPER}}' => '--lu3g-sc-title-dur: {{SIZE}}ms;' ),
+			)
+		);
+
+		$this->end_controls_section();
+	}
+
+	/**
+	 * Markup del titolo: le linee sono elementi propri (si animano da sole), il testo è il tag scelto.
+	 */
+	private function lu3g_sc_title( $settings ) {
+		if ( 'yes' !== $settings['title_show'] || '' === trim( (string) $settings['title_text'] ) ) {
+			return '';
+		}
+		$tags  = array( 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' );
+		$tag   = in_array( $settings['title_tag'], $tags, true ) ? $settings['title_tag'] : 'h2';
+		$anims = array( 'lines', 'tighten', 'sweep', 'letters', 'none' );
+		$anim  = in_array( $settings['title_animation'], $anims, true ) ? $settings['title_animation'] : 'lines';
+		$lines = in_array( $settings['title_lines'], array( 'both', 'top', 'bottom', 'none' ), true ) ? $settings['title_lines'] : 'both';
+		$width = 'text' === $settings['title_lines_width'] ? 'text' : 'full';
+
+		$out  = '<div class="lu3g-sc-title lu3g-sc-title--' . esc_attr( $anim ) . ' lu3g-sc-title--w-' . esc_attr( $width ) . '" data-lu3g-sc-title="' . esc_attr( $anim ) . '">';
+		$out .= '<div class="lu3g-sc-title__box">';
+		if ( 'both' === $lines || 'top' === $lines ) {
+			$out .= '<span class="lu3g-sc-title__line lu3g-sc-title__line--top" aria-hidden="true"></span>';
+		}
+		$out .= '<' . $tag . ' class="lu3g-sc-title__text">' . esc_html( $settings['title_text'] ) . '</' . $tag . '>';
+		if ( 'both' === $lines || 'bottom' === $lines ) {
+			$out .= '<span class="lu3g-sc-title__line lu3g-sc-title__line--bottom" aria-hidden="true"></span>';
+		}
+		$out .= '</div></div>';
+		return $out;
 	}
 
 	/**
@@ -1137,6 +1393,9 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 				'aria-label' => $settings['list_label'] ? $settings['list_label'] : esc_html__( 'I nostri sponsor', 'lu3g-sponsor-carousel' ),
 			)
 		);
+
+		// Titolo (facoltativo): sopra e fuori dal contenitore dei loghi, così non sposta frecce e tooltip.
+		echo $this->lu3g_sc_title( $settings ); // phpcs:ignore WordPress.Security.EscapeOutput -- escapato in lu3g_sc_title()
 
 		echo '<div ' . $this->get_render_attribute_string( 'wrapper' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput
 
