@@ -4,7 +4,7 @@ Tags: elementor, sponsor, logo, carousel, marquee
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: elementor
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 
 Widget Elementor per i loghi degli sponsor: marquee, doppia riga, slider, logo wall e griglia.
@@ -23,6 +23,9 @@ Aggiunge a Elementor il widget "Sponsor Carousel" (categoria LU3G). Funziona ovu
 Il plugin si aggiorna da solo dalle release di https://github.com/lu3gofficial/lu3g-sponsor-carousel.
 
 == Changelog ==
+= 1.2.0 =
+* Larghezza dei loghi uguale per tutti, per dispositivo.
+
 = 1.1.1 =
 * L'updater è generato dal modello comune lu3g-updater. Nessun cambiamento nel widget.
 

@@ -5,6 +5,7 @@
  * del widget ({{WRAPPER}}):
  *   --lu3g-sc-logo-height  altezza massima dei loghi
  *   --lu3g-sc-logo-width   larghezza massima dei loghi
+ *   --lu3g-sc-img-w, --lu3g-sc-img-h  "Larghezza dei loghi": larghezza uguale per tutti, altezza auto
  *   --lu3g-sc-gap          spaziatura tra i loghi
  *   --lu3g-sc-align        allineamento verticale
  *   --lu3g-sc-columns      colonne della griglia
@@ -62,15 +63,15 @@
    intero quando la larghezza massima lo stringe. */
 .lu3g-sc .lu3g-sc__img {
 	display: block;
-	width: auto;
-	height: var(--lu3g-sc-logo-height, 60px);
+	width: var(--lu3g-sc-img-w, auto);
+	height: var(--lu3g-sc-img-h, var(--lu3g-sc-logo-height, 60px));
 	max-width: var(--lu3g-sc-logo-width, 100%);
 	object-fit: contain;
 }
 
 /* SVG senza misure nel file: senza proporzioni note, occupa la larghezza disponibile. */
 .lu3g-sc .lu3g-sc__img:not([width]) {
-	width: 100%;
+	width: var(--lu3g-sc-img-w, 100%);
 }
 
 /* Effetto: normale e al passaggio del mouse / focus da tastiera (l'hover eredita il normale se non è impostato) */
@@ -219,7 +220,7 @@
 
 /* SVG senza misure: nel marquee non c'è una cella da riempire, si dà una proporzione 2:1 */
 .lu3g-sc--moving .lu3g-sc__img:not([width]) {
-	width: calc(var(--lu3g-sc-logo-height, 60px) * 2);
+	width: var(--lu3g-sc-img-w, calc(var(--lu3g-sc-logo-height, 60px) * 2));
 }
 
 /* Pausa al passaggio del mouse e col focus da tastiera */

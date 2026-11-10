@@ -576,6 +576,23 @@ class LU3G_SC_Sponsor_Carousel_Widget extends Widget_Base {
 			)
 		);
 
+		// Larghezza uguale per tutti i loghi (1.2.0): utile quando i file hanno tutti le stesse proporzioni.
+		// Vuota = comportamento di prima (altezza fissa, larghezza dalle proporzioni).
+		$this->add_responsive_control(
+			'logo_width',
+			array(
+				'label'       => esc_html__( 'Larghezza dei loghi', 'lu3g-sponsor-carousel' ),
+				'type'        => Controls_Manager::SLIDER,
+				'size_units'  => array( 'px', 'vw' ),
+				'range'       => array(
+					'px' => array( 'min' => 20, 'max' => 600 ),
+					'vw' => array( 'min' => 2, 'max' => 50 ),
+				),
+				'description' => esc_html__( 'Tutti i loghi prendono questa larghezza e l\'altezza segue le proporzioni del file (l\'altezza massima non conta più). Vuota: i loghi hanno l\'altezza massima e la larghezza dalle proporzioni.', 'lu3g-sponsor-carousel' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--lu3g-sc-img-w: {{SIZE}}{{UNIT}}; --lu3g-sc-img-h: auto;' ),
+			)
+		);
+
 		$this->add_responsive_control(
 			'logo_max_height',
 			array(

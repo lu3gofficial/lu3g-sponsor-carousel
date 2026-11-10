@@ -1,5 +1,8 @@
 # Registro delle modifiche
 
+## 1.2.0
+- *Stile → Loghi → Larghezza dei loghi*, per desktop, tablet e mobile (px o vw): tutti i loghi prendono la stessa larghezza e l'altezza segue le proporzioni del file. Utile quando i file hanno tutti le stesse proporzioni. Vale in tutti gli stili, anche per gli SVG senza misure. Vuota, i loghi restano come prima (altezza massima, larghezza dalle proporzioni).
+
 ## 1.1.1
 - `includes/class-updater.php` ora è generato dal modello comune di [lu3g-updater](https://github.com/lu3gofficial/lu3g-updater) (1.0.0), a partire dal nuovo file `.lu3g-updater`. Il codice dell'updater è lo stesso di prima: cambia solo il commento in cima. Nessun cambiamento nel widget.
 

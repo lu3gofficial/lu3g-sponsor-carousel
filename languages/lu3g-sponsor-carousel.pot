@@ -394,3 +394,9 @@ msgstr ""
 #, php-format
 msgid "LU3G Sponsor Carousel richiede Elementor %s o successivo: aggiorna Elementor."
 msgstr ""
+
+msgid "Larghezza dei loghi"
+msgstr ""
+
+msgid "Tutti i loghi prendono questa larghezza e l'altezza segue le proporzioni del file (l'altezza massima non conta più). Vuota: i loghi hanno l'altezza massima e la larghezza dalle proporzioni."
+msgstr ""
